@@ -29,6 +29,9 @@
     timeout = 5;
   };
 
+  # Set timezone to Kuala Lumpur
+  time.timeZone = "Asia/Kuala_Lumpur";
+
   # Networking defaults
   networking = {
     networkmanager.enable = true;

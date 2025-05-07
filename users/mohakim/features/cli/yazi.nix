@@ -20,7 +20,7 @@
         linemode = "size";
       };
 
-      # Opening behavior - note the correct format
+      # Opening behavior
       opener = {
         edit = [
           { run = "hx \"$@\""; block = true; }
@@ -47,21 +47,23 @@
         ];
 
         archive = [
-          # Correct format for the archive opener
+          # Correct format for the archive opener with proper escaping
           {
-            run = "sh -c 'mkdir -p \"${1%%.*}\" && tar -xf \"$1\" -C \"${1%%.*}\"'"; block = true; }
+            run = ''sh -c 'mkdir -p "''${1%%.*}" && tar -xf "$1" -C "''${1%%.*}"'';
+            block = true;
+          }
         ];
-        
+
         fallback = [
           { run = "xdg-open \"$@\""; block = false; }
         ];
       };
-      
+
       # Theme using Catppuccin Mocha
       theme = {
         selection = "#585b70";
         selection-match = "#fab387";
-        
+
         # File colors
         file = {
           name = { fg = "#cdd6f4"; };
@@ -79,7 +81,7 @@
           archive = { fg = "#f38ba8"; };
           temp = { fg = "#9399b2"; };
         };
-        
+
         status = {
           separator_open = "";
           separator_close = "";
@@ -92,13 +94,13 @@
           mtime = { fg = "#1e1e2e"; bg = "#cba6f7"; };
           rule = { fg = "#6c7086"; };
         };
-        
+
         border = {
           fg = "#cdd6f4";
           bg = "#1e1e2e";
           corner = "┌";
         };
-        
+
         help = {
           on = { fg = "#f9e2af"; };
           off = { fg = "#6c7086"; };
@@ -109,7 +111,7 @@
         };
       };
     };
-    
+
     # Key bindings
     keymap = {
       # General
@@ -131,15 +133,15 @@
       ];
     };
   };
-  
+
   # Install dependencies
   home.packages = with pkgs; [
-    imv        # Image viewer
-    mpv        # Video player
-    zathura    # PDF viewer
-    file       # File type detection
+    imv # Image viewer
+    mpv # Video player
+    zathura # PDF viewer
+    file # File type detection
     ffmpegthumbnailer # Video thumbnails
-    poppler    # PDF thumbnails
+    poppler # PDF thumbnails
     ueberzugpp
   ];
 }

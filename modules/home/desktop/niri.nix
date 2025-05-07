@@ -1,9 +1,12 @@
-# Niri user configuration module
+# Niri user configuration module (standalone-compatible)
 { config, pkgs, lib, ... }:
 
 with lib;
 let
   cfg = config.custom.desktop.niri;
+
+  # Check if programs.niri is available
+  hasNiriModule = hasAttrByPath [ "programs" "niri" ] config;
 in
 {
   options.custom.desktop.niri = {
@@ -53,10 +56,10 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    # Niri configuration
-    programs.niri = {
-      settings = {
+  config = mkIf cfg.enable (
+    let
+      # Generate the full Niri configuration
+      niriSettings = {
         # Set environment variables
         environment = {
           "NIXOS_OZONE_WL" = "1";
@@ -289,12 +292,26 @@ in
           };
         } // cfg.keyBindings;
       };
-    };
+    in
+    mkMerge [
+      # If programs.niri is available (NixOS module mode)
+      (mkIf hasNiriModule {
+        programs.niri.settings = niriSettings;
+      })
 
-    # Install dependencies
-    home.packages = with pkgs; [
-      wl-gammarelay-rs
-      xwayland-satellite
-    ];
-  };
+      # If programs.niri is not available (standalone mode)
+      (mkIf (!hasNiriModule) {
+        # Write the configuration to the XDG config directory instead
+        xdg.configFile."niri/config.kdl".text = builtins.toJSON niriSettings;
+      })
+
+      # Common dependencies
+      {
+        home.packages = with pkgs; [
+          wl-gammarelay-rs
+          xwayland-satellite
+        ];
+      }
+    ]
+  );
 }
