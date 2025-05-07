@@ -8,7 +8,6 @@
 
     # Import home-manager modules for desktop
     ../../../../modules/home/desktop/alacritty.nix
-    ../../../../modules/home/desktop/niri.nix
     ../../../../modules/home/desktop/wl-gammarelay.nix
   ];
 
@@ -16,7 +15,6 @@
   custom = {
     desktop = {
       alacritty.enable = true;
-      niri.enable = true;
       wl-gammarelay.enable = true;
       proton-ge.enable = true;
     };
