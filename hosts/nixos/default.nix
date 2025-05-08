@@ -22,10 +22,8 @@
   # Enable all desktop modules
   modules = {
     desktop = {
-      niri = {
-        enable = true;
-        package = pkgs.niri-stable;
-      };
+      niri.enable = true;
+      niri.package = pkgs.niri-stable;
       nvidia.enable = true;
       keyd.enable = true;
       xwayland.enable = true;

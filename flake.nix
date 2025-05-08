@@ -23,7 +23,9 @@
 
       # Import all overlays from the overlays directory
       # This returns a list of overlay functions
-      overlays = import ./overlays;
+      overlays = import ./overlays ++ [
+        niri.overlays.niri
+      ];
 
       # Create a properly overlaid pkgs
       pkgs = import nixpkgs {
@@ -87,6 +89,7 @@
           };
           modules = [
             ./users/${username}/home.nix
+            niri.homeModules.config
           ];
         };
       };

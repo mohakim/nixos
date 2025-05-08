@@ -28,6 +28,7 @@
     grim
     slurp
     wl-clipboard
+    librewolf
     catppuccin-gtk
     papirus-icon-theme
     nerd-fonts.jetbrains-mono
