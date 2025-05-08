@@ -66,199 +66,199 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    # Add the niri overlay to make niri packages available
-    nixpkgs.overlays = [ niri.overlays.niri ];
+  config = mkIf cfg.enable
+    {
+      # Add the niri overlay to make niri packages available
+      nixpkgs.overlays = [ niri.overlays.niri ];
 
-    # Enable Niri window manager
-    programs.niri = {
-      enable = true;
-      package = cfg.package;
-    };
+      # Configure the display manager to use Niri
+      services.greetd = mkIf cfg.autoStart {
+        enable = true;
+        settings = {
+          default_session = {
+            command = "niri --session";
+            user = username;
+          };
+        };
+      };
 
-    # Generate the niri configuration file directly
-    environment.etc."niri/config.kdl".text = builtins.toJSON {
-      # Set environment variables
-      environment = {
+      # Add environment variables for Wayland
+      environment.sessionVariables = {
         "NIXOS_OZONE_WL" = "1";
         "MOZ_ENABLE_WAYLAND" = "1";
         "XDG_CURRENT_DESKTOP" = "niri";
-        "DISPLAY" = ":0";
       };
 
-      # Input device configuration
-      input = {
-        keyboard = {
-          xkb = { };
-        };
+      # Install necessary packages
+      environment.systemPackages = with pkgs; [
+        wl-gammarelay-rs
+        xwayland-satellite
+        swww
+      ];
 
-        touchpad = {
-          enable = true;
-          tap = true;
-          natural-scroll = true;
-        };
-
-        mouse = {
-          enable = true;
-        };
-      };
-
-      # Output configuration
-      outputs = if cfg.outputs != { } then cfg.outputs else {
-        "DP-2" = {
-          mode = {
-            width = 2560;
-            height = 1440;
-            refresh = 165.056;
+      # Enable Niri window manager
+      programs.niri = {
+        enable = true;
+        package = cfg.package;
+        settings = {
+          # Set environment variables
+          environment = {
+            "NIXOS_OZONE_WL" = "1";
+            "MOZ_ENABLE_WAYLAND" = "1";
+            "XDG_CURRENT_DESKTOP" = "niri";
+            "DISPLAY" = ":0";
           };
-          position = {
-            x = 0;
-            y = 0;
-          };
-          scale = 1.0;
-        };
-        "eDP-1" = {
-          mode = {
-            width = 2560;
-            height = 1600;
-            refresh = 165.0;
-          };
-          enable = false;
-        };
-      };
 
-      # Layout settings
-      layout = {
-        focus-ring = {
-          enable = false;
-          width = 2;
-          active = { color = "#74c7ec"; };
-          inactive = { color = "#585b70"; };
-        };
+          # Input device configuration
+          input = {
+            keyboard = {
+              xkb = { };
+            };
 
-        border = {
-          enable = true;
-          width = 2;
-          active = {
-            gradient = {
-              from = "#f38ba8";
-              to = "#f9e2af";
-              angle = 45;
-              relative-to = "workspace-view";
+            touchpad = {
+              enable = true;
+              tap = true;
+              natural-scroll = true;
+            };
+
+            mouse = {
+              enable = true;
             };
           };
-          inactive = {
-            gradient = {
-              from = "#585b70";
-              to = "#7f849c";
-              angle = 45;
-              relative-to = "workspace-view";
+
+          # Output configuration
+          outputs = if cfg.outputs != { } then cfg.outputs else {
+            "DP-2" = {
+              mode = {
+                width = 2560;
+                height = 1440;
+                refresh = 165.056;
+              };
+              position = {
+                x = 0;
+                y = 0;
+              };
+              scale = 1.0;
+            };
+            "eDP-1" = {
+              mode = {
+                width = 2560;
+                height = 1600;
+                refresh = 165.0;
+              };
+              enable = false;
             };
           };
-        };
 
-        gaps = 4;
+          # Layout settings
+          layout = {
+            focus-ring = {
+              enable = false;
+              width = 2;
+              active = { color = "#74c7ec"; };
+              inactive = { color = "#585b70"; };
+            };
 
-        preset-column-widths = [
-          { proportion = 0.33333; } # 1/3
-          { proportion = 0.5; } # 1/2
-          { proportion = 0.66667; } # 2/3
-        ];
+            border = {
+              enable = true;
+              width = 2;
+              active = {
+                gradient = {
+                  from = "#f38ba8";
+                  to = "#f9e2af";
+                  angle = 45;
+                  relative-to = "workspace-view";
+                };
+              };
+              inactive = {
+                gradient = {
+                  from = "#585b70";
+                  to = "#7f849c";
+                  angle = 45;
+                  relative-to = "workspace-view";
+                };
+              };
+            };
 
-        default-column-width = { proportion = 0.33333; };
-      };
+            gaps = 4;
 
-      # Prefer server-side decorations
-      prefer-no-csd = true;
+            preset-column-widths = [
+              { proportion = 0.33333; } # 1/3
+              { proportion = 0.5; } # 1/2
+              { proportion = 0.66667; } # 2/3
+            ];
 
-      # Spawn at startup
-      spawn-at-startup = cfg.startupPrograms ++ (optional (cfg.wallpaper != null) {
-        command = [ "sh" "-c" "sleep 1 && swww img ${cfg.wallpaper}" ];
-      });
-
-      # Window rules
-      window-rules = [
-        # Apply rounded corners to ALL applications
-        {
-          matches = [{ }];
-          geometry-corner-radius = {
-            top-left = cfg.cornerRadius;
-            top-right = cfg.cornerRadius;
-            bottom-left = cfg.cornerRadius;
-            bottom-right = cfg.cornerRadius;
+            default-column-width = { proportion = 0.33333; };
           };
-          clip-to-geometry = true;
-        }
-      ] ++ (map
-        (app: {
-          matches = [{ app-id = app.app-id; }];
-          opacity = app.opacity;
-          draw-border-with-background = false;
-        })
-        cfg.transparentApps);
 
-      # Key bindings - default set
-      binds = {
-        "Mod+Shift+Slash".action.show-hotkey-overlay = { };
+          # Prefer server-side decorations
+          prefer-no-csd = true;
 
-        "Ctrl+Tab".action.spawn = "alacritty";
-        "Mod+F".action.spawn = "librewolf";
-        "Mod+Space".action.spawn = "fuzzel";
+          # Spawn at startup
+          spawn-at-startup = cfg.startupPrograms ++ (optional (cfg.wallpaper != null) {
+            command = [ "sh" "-c" "sleep 1 && swww img ${cfg.wallpaper}" ];
+          });
 
-        "XF86AudioRaiseVolume" = {
-          action.spawn = [ "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+" ];
-          allow-when-locked = true;
-        };
-        "XF86AudioLowerVolume" = {
-          action.spawn = [ "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-" ];
-          allow-when-locked = true;
-        };
-        "XF86AudioMute" = {
-          action.spawn = [ "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle" ];
-          allow-when-locked = true;
-        };
-        "XF86AudioMicMute" = {
-          action.spawn = [ "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle" ];
-          allow-when-locked = true;
-        };
+          # Window rules
+          window-rules = [
+            # Apply rounded corners to ALL applications
+            {
+              matches = [{ }];
+              geometry-corner-radius = {
+                top-left = cfg.cornerRadius;
+                top-right = cfg.cornerRadius;
+                bottom-left = cfg.cornerRadius;
+                bottom-right = cfg.cornerRadius;
+              };
+              clip-to-geometry = true;
+            }
+          ] ++ (map
+            (app: {
+              matches = [{ app-id = app.app-id; }];
+              opacity = app.opacity;
+              draw-border-with-background = false;
+            })
+            cfg.transparentApps);
 
-        "Ctrl+Escape".action.close-window = { };
+          # Key bindings - default set
+          binds = {
+            "Mod+Shift+Slash".action.show-hotkey-overlay = { };
 
-        "Ctrl+K".action.focus-window-down = { };
-        "Ctrl+I".action.focus-window-up = { };
-        "Ctrl+J".action.focus-column-left = { };
-        "Ctrl+L".action.focus-column-right = { };
+            "Ctrl+Tab".action.spawn = "alacritty";
+            "Mod+F".action.spawn = "librewolf";
+            "Mod+Space".action.spawn = "fuzzel";
 
-        "Mod+J".action.move-column-left = { };
-        "Mod+K".action.move-window-down = { };
-        "Mod+I".action.move-window-up = { };
-        "Mod+L".action.move-column-right = { };
-      } // cfg.keyBindings;
-    };
+            "XF86AudioRaiseVolume" = {
+              action.spawn = [ "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+" ];
+              allow-when-locked = true;
+            };
+            "XF86AudioLowerVolume" = {
+              action.spawn = [ "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-" ];
+              allow-when-locked = true;
+            };
+            "XF86AudioMute" = {
+              action.spawn = [ "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle" ];
+              allow-when-locked = true;
+            };
+            "XF86AudioMicMute" = {
+              action.spawn = [ "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle" ];
+              allow-when-locked = true;
+            };
 
-    # Configure the display manager to use Niri
-    services.greetd = mkIf cfg.autoStart {
-      enable = true;
-      settings = {
-        default_session = {
-          command = "niri --session";
-          user = username;
+            "Ctrl+Escape".action.close-window = { };
+
+            "Ctrl+K".action.focus-window-down = { };
+            "Ctrl+I".action.focus-window-up = { };
+            "Ctrl+J".action.focus-column-left = { };
+            "Ctrl+L".action.focus-column-right = { };
+
+            "Mod+J".action.move-column-left = { };
+            "Mod+K".action.move-window-down = { };
+            "Mod+I".action.move-window-up = { };
+            "Mod+L".action.move-column-right = { };
+          } // cfg.keyBindings;
         };
       };
     };
 
-    # Add environment variables for Wayland
-    environment.sessionVariables = {
-      "NIXOS_OZONE_WL" = "1";
-      "MOZ_ENABLE_WAYLAND" = "1";
-      "XDG_CURRENT_DESKTOP" = "niri";
-    };
-
-    # Install necessary packages
-    environment.systemPackages = with pkgs; [
-      wl-gammarelay-rs
-      xwayland-satellite
-      swww
-    ];
-  };
 }
