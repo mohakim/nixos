@@ -1,0 +1,35 @@
+[2m2025-05-08T00:38:21.528895Z[0m [33m WARN[0m [2mniri[0m[2m:[0m running as a session but DISPLAY is set, removing it
+[2m2025-05-08T00:38:21.528923Z[0m [32m INFO[0m [2mniri[0m[2m:[0m starting version stable v25.02 (commit b94a5db8790339cf9134873d8b490be69e02ac71)
+[2m2025-05-08T00:38:21.529043Z[0m [33m WARN[0m [2mniri[0m[2m:[0m   [31mx[0m error loading config
+[31m  |-> [0merror parsing
+[31m  `-> [0merror parsing KDL
+
+Error:   [31mx[0m found `{`, expected `"`, `(`, `+`, `-`, `0`, `r`, letter, newline,
+  [31m|[0m whitespace or end of input
+   ,-[[36;1;4mconfig.kdl[0m:1:1]
+ [2m1[0m | {"binds":{"Ctrl+Escape":{"action":{"close-window":{}}},"Ctrl+I":{"action":{"focus-window-up":{}}},"Ctrl+J":{"action":{"focus-column-left":{}}},"Ctrl+K":{"action":{"focus-window-down":{}}},"Ctrl+L":{"action":{"focus-column-right":{}}},"Ctrl+Tab":{"action":{"spawn":"alacritty"}},"Mod+F":{"action":{"spawn":"librewolf"}},"Mod+I":{"action":{"move-window-up":{}}},"Mod+J":{"action":{"move-column-left":{}}},"Mod+K":{"action":{"move-window-down":{}}},"Mod+L":{"action":{"move-column-right":{}}},"Mod+Shift+Slash":{"action":{"show-hotkey-overlay":{}}},"Mod+Space":{"action":{"spawn":"fuzzel"}},"XF86AudioLowerVolume":{"action":{"spawn":["wpctl","set-volume","@DEFAULT_AUDIO_SINK@","0.1-"]},"allow-when-locked":true},"XF86AudioMicMute":{"action":{"spawn":["wpctl","set-mute","@DEFAULT_AUDIO_SOURCE@","toggle"]},"allow-when-locked":true},"XF86AudioMute":{"action":{"spawn":["wpctl","set-mute","@DEFAULT_AUDIO_SINK@","toggle"]},"allow-when-locked":true},"XF86AudioRaiseVolume":{"action":{"spawn":["wpctl","set-volume","@DEFAULT_AUDIO_SINK@","0.1+"]},"allow-when-locked":true}},"environment":{"DISPLAY":":0","MOZ_ENABLE_WAYLAND":"1","NIXOS_OZONE_WL":"1","XDG_CURRENT_DESKTOP":"niri"},"input":{"keyboard":{"xkb":{}},"mouse":{"enable":true},"touchpad":{"enable":true,"natural-scroll":true,"tap":true}},"layout":{"border":{"active":{"gradient":{"angle":45,"from":"#f38ba8","relative-to":"workspace-view","to":"#f9e2af"}},"enable":true,"inactive":{"gradient":{"angle":45,"from":"#585b70","relative-to":"workspace-view","to":"#7f849c"}},"width":2},"default-column-width":{"proportion":0.33333},"focus-ring":{"active":{"color":"#74c7ec"},"enable":false,"inactive":{"color":"#585b70"},"width":2},"gaps":4,"preset-column-widths":[{"proportion":0.33333},{"proportion":0.5},{"proportion":0.66667}]},"outputs":{"DP-2":{"mode":{"height":1440,"refresh":165.056,"width":2560},"position":{"x":0,"y":0},"scale":1.0},"eDP-1":{"enable":false,"mode":{"height":1600,"refresh":165.0,"width":2560}}},"prefer-no-csd":true,"spawn-at-startup":[{"command":["swww-daemon"]},{"command":["xwayland-satellite"]},{"command":["wl-gammarelay-rs","run"]}],"window-rules":[{"clip-to-geometry":true,"geometry-corner-radius":{"bottom-left":6.0,"bottom-right":6.0,"top-left":6.0,"top-right":6.0},"matches":[{}]},{"draw-border-with-background":false,"matches":[{"app-id":"librewolf"}],"opacity":0.9},{"draw-border-with-background":false,"matches":[{"app-id":"obsidian"}],"opacity":0.9}]}
+   : [35;1m|[0m
+   : [35;1m`-- [35;1munexpected token[0m[0m
+   `----
+
+[2m2025-05-08T00:38:21.604532Z[0m [32m INFO[0m [2mniri::backend::tty[0m[2m:[0m using as the render node: "/dev/dri/renderD128"
+[2m2025-05-08T00:38:21.616114Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m device added: 57857 "/dev/dri/card1"
+[2m2025-05-08T00:38:21.819078Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m this is the primary node
+[2m2025-05-08T00:38:21.819095Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m this is the primary render node
+[2m2025-05-08T00:38:22.140572Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m device changed: 57857
+[2m2025-05-08T00:38:22.208553Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m new connector: DP-2 "Beihai Century Joint Innovation Technology Co.,Ltd X315 PRO 0000000000000"
+[2m2025-05-08T00:38:22.208577Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m new connector: eDP-1 "California Institute of Technology 0x1609 Unknown"
+[2m2025-05-08T00:38:22.208589Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m connecting connector: DP-2
+[2m2025-05-08T00:38:22.208607Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m picking mode: Mode { name: "2560x1440", clock: 243480, size: (2560, 1440), hsync: (2608, 2640, 2740), vsync: (1443, 1448, 1481), hskew: 0, vscan: 0, vrefresh: 60, mode_type: ModeTypeFlags(PREFERRED) }
+[2m2025-05-08T00:38:22.208630Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m error setting max bpc: couldn't find max bpc property
+[2m2025-05-08T00:38:22.213069Z[0m [34mDEBUG[0m [2mniri::niri[0m[2m:[0m putting output DP-2 at x=0 y=0
+[2m2025-05-08T00:38:22.213079Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m connecting connector: eDP-1
+[2m2025-05-08T00:38:22.213093Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m picking mode: Mode { name: "2560x1600", clock: 282700, size: (2560, 1600), hsync: (2608, 2640, 2720), vsync: (1603, 1609, 1732), hskew: 0, vscan: 0, vrefresh: 60, mode_type: ModeTypeFlags(PREFERRED) }
+[2m2025-05-08T00:38:22.213109Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m error setting max bpc: couldn't find max bpc property
+[2m2025-05-08T00:38:22.218992Z[0m [34mDEBUG[0m [2mniri::niri[0m[2m:[0m putting output eDP-1 at x=2560 y=0
+[2m2025-05-08T00:38:22.219047Z[0m [32m INFO[0m [2mniri[0m[2m:[0m listening on Wayland socket: wayland-2
+[2m2025-05-08T00:38:22.219052Z[0m [32m INFO[0m [2mniri[0m[2m:[0m IPC listening on: /run/user/1000/niri.wayland-2.1885.sock
+[2m2025-05-08T00:38:22.236398Z[0m [33m WARN[0m [2mniri::dbus[0m[2m:[0m error starting org.gnome.Mutter.ServiceChannel: name already taken on the bus
+[2m2025-05-08T00:38:22.240576Z[0m [33m WARN[0m [2mniri::cursor[0m[2m:[0m error loading xcursor default@48: no default icon
+[2m2025-05-08T00:38:22.533416Z[0m [33m WARN[0m [2mniri::cursor[0m[2m:[0m error loading xcursor default@24: no default icon
+[2m2025-05-08T00:38:34.471738Z[0m [34mDEBUG[0m [2mniri::backend::tty[0m[2m:[0m pausing session
