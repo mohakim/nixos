@@ -18,10 +18,14 @@
   # Host-specific configuration
   networking.hostName = "nixos";
 
+
   # Enable all desktop modules
   modules = {
     desktop = {
-      niri.enable = true;
+      niri = {
+        enable = true;
+        package = pkgs.niri-stable;
+      };
       nvidia.enable = true;
       keyd.enable = true;
       xwayland.enable = true;

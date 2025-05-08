@@ -1,10 +1,11 @@
 # Home Manager standalone configuration for mohakim
-{ config, pkgs, lib, username, overlays, ... }:
+{ config, pkgs, lib, username, overlays, niri, ... }:
 
 {
   imports = [
     # Import profile
     ./profiles/default.nix
+
 
     # Import features
     ./features/cli/default.nix

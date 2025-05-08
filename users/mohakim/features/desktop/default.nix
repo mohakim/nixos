@@ -9,6 +9,7 @@
     # Import home-manager modules for desktop
     ../../../../modules/home/desktop/alacritty.nix
     ../../../../modules/home/desktop/wl-gammarelay.nix
+    ../../../../modules/home/desktop/niri.nix
   ];
 
   # Enable the desktop modules you want
