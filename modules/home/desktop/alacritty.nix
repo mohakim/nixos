@@ -97,6 +97,8 @@ in
           dynamic_title = true;
         };
 
+        general.ipc_socket = true;
+
         # Selection settings
         selection = {
           save_to_clipboard = false;

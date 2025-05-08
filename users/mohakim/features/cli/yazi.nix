@@ -142,6 +142,5 @@
     file # File type detection
     ffmpegthumbnailer # Video thumbnails
     poppler # PDF thumbnails
-    ueberzugpp
   ];
 }
