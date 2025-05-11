@@ -47,7 +47,7 @@ in
       # Interactive shell initialization
       interactiveShellInit = ''
         # Initialize Starship prompt if enabled
-        ${optionalString config.programs.starship.enable "${pkgs.starship}/bin/starship init fish | source"}
+        ${optionalString config.programs.starship.enable "starship init fish | source"}
         
         # Remove fish greeting
         set -U fish_greeting "${cfg.greeting}"
@@ -59,15 +59,6 @@ in
         # Custom init commands
         ${cfg.extraInitCommands}
       '';
-
-      # Login shell configuration
-      # loginShellInit = mkIf cfg.startNiri ''
-      #   # Start niri session if this is a login shell
-      #   # Only run this on TTY (not inside an existing session)
-      #   if status is-login; and test -z "$DISPLAY"; and test (tty) = "/dev/tty1"
-      #     exec niri --session
-      #   end
-      # '';
 
       # Shell aliases - combine default with custom
       shellAliases = {
@@ -134,6 +125,7 @@ in
 
     # Install dependencies
     home.packages = with pkgs; [
+      starship
       fish
     ];
   };

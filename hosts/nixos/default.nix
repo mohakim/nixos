@@ -10,7 +10,7 @@
     ../../modules/system/desktop/niri.nix
     ../../modules/system/desktop/nvidia.nix
     ../../modules/system/desktop/keyd.nix
-    ../../modules/system/desktop/xwayland.nix
+    # ../../modules/system/desktop/xwayland.nix
     ../../modules/system/services/bluetooth.nix
     ../../modules/system/services/steam.nix
   ];
@@ -26,7 +26,7 @@
       niri.package = pkgs.niri-stable;
       nvidia.enable = true;
       keyd.enable = true;
-      xwayland.enable = true;
+      # xwayland.enable = true;
     };
     services = {
       bluetooth.enable = true;
@@ -51,7 +51,7 @@
     gst_all_1.gst-plugins-ugly
     gst_all_1.gst-libav
     wl-gammarelay-rs
-    xwayland-satellite
+    # xwayland-satellite
     swww
   ];
 }

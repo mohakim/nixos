@@ -16,6 +16,7 @@ in
         *
 
         [main]
+        capslock = esc
         alt = layer(alt)
 
         [alt]

@@ -25,7 +25,7 @@ in
   config = mkIf cfg.enable {
     # Install xwayland-satellite
     environment.systemPackages = with pkgs; [
-      xwayland-satellite
+      # xwayland-satellite
     ] ++ cfg.additionalPackages;
 
     # Make the DISPLAY variable available to the user environment

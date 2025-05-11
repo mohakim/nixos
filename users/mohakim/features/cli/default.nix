@@ -10,11 +10,13 @@
     ../../../../modules/home/cli/fish.nix
     ../../../../modules/home/cli/helix.nix
     ../../../../modules/home/cli/starship.nix
+    ../../../../modules/home/cli/zellij.nix
   ];
 
   # Enable the CLI tools you want
   custom = {
     cli = {
+      zellij.enable = true;
       fish.enable = true;
       helix.enable = true;
       starship.enable = true;
@@ -74,7 +76,7 @@
   programs.bat = {
     enable = true;
     config = {
-      theme = "Catppuccin-mocha";
+      theme = "Dracula";
       italic-text = "always";
       style = "numbers,changes,header";
     };

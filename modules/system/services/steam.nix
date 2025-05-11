@@ -39,8 +39,8 @@ in
       type = types.lines;
       default = ''
         # Wayland support
-        export GDK_BACKEND=x11
-        export SDL_VIDEODRIVER=x11
+        # export GDK_BACKEND=x11
+        # export SDL_VIDEODRIVER=x11
         export QT_QPA_PLATFORM=xcb
         export STEAM_FORCE_DESKTOPUI_SCALING=1
       

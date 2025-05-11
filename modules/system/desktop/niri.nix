@@ -25,7 +25,7 @@ in
 
     environment.systemPackages = with pkgs; [
       wl-gammarelay-rs
-      xwayland-satellite
+      # xwayland-satellite
       swww
     ];
   };

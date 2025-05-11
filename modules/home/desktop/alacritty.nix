@@ -193,18 +193,6 @@ in
             { index = 17; color = "#f5e0dc"; }
           ];
         };
-
-        # # Key bindings
-        # key_bindings = [
-        #   # Copy/paste
-        #   { key = "V"; mods = "Control"; action = "Paste"; }
-        #   { key = "C"; mods = "Control|Shift"; action = "Copy"; }
-
-        #   # Font size
-        #   { key = "Plus"; mods = "Control"; action = "IncreaseFontSize"; }
-        #   { key = "Minus"; mods = "Control"; action = "DecreaseFontSize"; }
-        #   { key = "Key0"; mods = "Control"; action = "ResetFontSize"; }
-        # ];
       };
     };
   };
