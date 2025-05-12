@@ -100,6 +100,7 @@
 
   # Enable fish shell system-wide
   programs.fish.enable = true;
+  programs.command-not-found.enable = false;
 
   # Keep state version fixed
   system.stateVersion = "23.11";

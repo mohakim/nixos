@@ -11,7 +11,7 @@ in
 
     package = mkOption {
       type = types.package;
-      default = config.boot.kernelPackages.nvidiaPackages.beta;
+      default = config.boot.kernelPackages.nvidiaPackages.stable;
       description = "The NVIDIA driver package to use";
     };
 

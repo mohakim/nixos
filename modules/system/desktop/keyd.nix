@@ -8,40 +8,38 @@ in
 {
   options.modules.desktop.keyd = {
     enable = mkEnableOption "Enable keyd key remapping daemon";
-
-    configuration = mkOption {
-      type = types.lines;
-      default = ''
-        [ids]
-        *
-
-        [main]
-        capslock = esc
-        alt = layer(alt)
-
-        [alt]
-        j = left
-        i = up
-        l = right
-        k = down
-        backspace = delete
-        u = home
-        o = end
-
-        [alt:C]
-      '';
-      description = "The keyd configuration content";
-    };
   };
 
   config = mkIf cfg.enable {
     # Enable the keyd service
     services.keyd = {
       enable = true;
-    };
+      keyboards.default = {
+        settings = {
+          # INI format requires sections with key-value pairs
+          ids = {
+            "*" = ""; # Empty string for a wildcard match
+          };
 
-    # Create a configuration file directly in the correct location
-    environment.etc."keyd/default.conf".text = cfg.configuration;
+          main = {
+            capslock = "C-g"; # Map capslock to Ctrl+g for Zellij unlock
+            alt = "layer(alt)";
+          };
+
+          alt = {
+            j = "left";
+            i = "up";
+            l = "right";
+            k = "down";
+            backspace = "delete";
+            u = "home";
+            o = "end";
+          };
+
+          "alt:C" = { }; # Empty section
+        };
+      };
+    };
 
     # Install keyd package
     environment.systemPackages = with pkgs; [

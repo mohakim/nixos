@@ -35,7 +35,6 @@ let
           // Return to locked mode with Escape or prefix again
           // Use Esc key for returning to locked mode
           bind "Esc" { SwitchToMode "locked"; }
-          bind "${prefixKey}" { SwitchToMode "locked"; }
         
           // Navigation with jkli - matches your muscle memory
           bind "j" { MoveFocus "Left"; }
@@ -118,14 +117,54 @@ in
     enable = mkEnableOption "Enable Zellij terminal multiplexer";
 
     theme = mkOption {
-      type = types.enum [ "mocha" "macchiato" "frappe" "latte" ];
-      default = "mocha";
-      description = "Catppuccin theme variant";
+      type = types.enum [
+        # Dark Themes
+        "ansi"
+        "ao"
+        "atelier-sulphurpool"
+        "ayu_mirage"
+        "ayu_dark"
+        "catppuccin-frappe"
+        "catppuccin-macchiato"
+        "cyber-noir"
+        "blade-runner"
+        "retro-wave"
+        "dracula"
+        "everforest-dark"
+        "gruvbox-dark"
+        "iceberg-dark"
+        "kanagawa"
+        "lucario"
+        "menace"
+        "molokai-dark"
+        "night-owl"
+        "nightfox"
+        "nord"
+        "one-half-dark"
+        "onedark"
+        "solarized-dark"
+        "tokyo-night-dark"
+        "tokyo-night-storm"
+        "tokyo-night"
+        "vesper"
+        # Light Themes
+        "ayu_light"
+        "catppuccin-latte"
+        "everforest-light"
+        "gruvbox-light"
+        "iceberg-light"
+        "dayfox"
+        "pencil-light"
+        "solarized-light"
+        "tokyo-night-light"
+      ];
+      default = "catppuccin-macchiato";
+      description = "Zellij theme";
     };
 
     prefixKey = mkOption {
       type = types.str;
-      default = "Ctrl a";
+      default = "Ctrl g";
       description = "Prefix key to enter Zellij command mode";
     };
   };
@@ -142,3 +181,4 @@ in
     };
   };
 }
+

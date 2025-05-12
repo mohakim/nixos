@@ -18,7 +18,7 @@ in
 
       capSysNice = mkOption {
         type = types.bool;
-        default = false;
+        default = true;
         description = "Whether to cap system nice levels for Gamescope";
       };
 
