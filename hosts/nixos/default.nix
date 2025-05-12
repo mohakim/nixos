@@ -8,7 +8,7 @@
 
     # Import system modules
     ../../modules/system/desktop/niri.nix
-    ../../modules/system/desktop/nvidia.nix # Unified NVIDIA+Wayland module
+    ../../modules/system/desktop/nvidia.nix
     ../../modules/system/desktop/keyd.nix
     ../../modules/system/services/bluetooth.nix
     ../../modules/system/services/steam.nix
@@ -23,7 +23,7 @@
     desktop = {
       niri.enable = true;
       niri.package = pkgs.niri-stable;
-      nvidia-wayland.enable = true; # Combined module
+      nvidia.enable = true;
       keyd.enable = true;
     };
     services = {

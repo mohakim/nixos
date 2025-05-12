@@ -11,46 +11,58 @@ in
   };
 
   config = mkIf cfg.enable {
-    # Enable standard NixOS gamescope module with optimized settings
+    # Enable gamescope with simplified settings
     programs.gamescope = {
       enable = true;
-      capSysNice = false; # Keep false for NVIDIA compatibility
+      capSysNice = false;
 
-      # Core arguments for optimal performance
+      # Simplified args known to work with NVIDIA
       args = [
-        "--rt" # Use realtime priority rendering
-        "--force-direct-composition" # Force direct composition mode
-        "--hdr-enabled" # Enable HDR support
+        "--rt"
       ];
+
+      # Critical environment variables - explicitly set to override any global settings
+      env = {
+        # Force NVIDIA Vulkan ICD explicitly
+        "VK_ICD_FILENAMES" = "${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.json";
+        "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
+        # Enable Vulkan debugging
+        "VK_LOADER_DEBUG" = "all";
+        # Wayland and SDL config
+        "SDL_VIDEODRIVER" = "wayland,x11";
+      };
     };
 
-    # Instead of using the env option, we'll apply environment variables system-wide
-    # This avoids the wrapping error while still ensuring the variables are available
-    environment.variables = {
-      "GAMESCOPE_FORCE_DIRECT_VULKAN_DEVICE" = "1";
-      "GAMESCOPE_RT_COMPOSITOR" = "1";
-      "VK_LOADER_LAYERS_ENABLE" = "*_WAYLAND_*";
-      "ENABLE_VKBASALT" = "1";
-    };
-
-    # Only include packages specific to Gamescope
+    # Create test script for Gamescope + NVIDIA
     environment.systemPackages = with pkgs; [
-      gamescope
-      wl-gammarelay-rs
-      swww
+      (writeShellScriptBin "fix-nvidia-gamescope" ''
+        #!/usr/bin/env bash
+        # Script to fix NVIDIA + Gamescope compatibility
+        
+        # Find the correct NVIDIA ICD file
+        NVIDIA_PATH="${config.hardware.nvidia.package.out}"
+        ICD_PATH="$NVIDIA_PATH/share/vulkan/icd.d/nvidia_icd.json"
+        
+        # Check if it exists
+        if [ ! -f "$ICD_PATH" ]; then
+          echo "ERROR: NVIDIA Vulkan ICD file not found at: $ICD_PATH"
+          echo "Looking for alternatives..."
+          find /nix/store -name "nvidia_icd.json" | grep -v i686
+          exit 1
+        fi
+        
+        # Set environment variables
+        export VK_ICD_FILENAMES="$ICD_PATH"
+        export __GLX_VENDOR_LIBRARY_NAME=nvidia
+        export SDL_VIDEODRIVER=wayland,x11
+        
+        # Debug info
+        echo "Using NVIDIA Vulkan ICD: $ICD_PATH"
+        echo "Running: gamescope -W 800 -H 600 --force-windows-fullscreen $@"
+        
+        # Run gamescope with basic settings
+        gamescope -W 800 -H 600 --force-windows-fullscreen -- "$@"
+      '')
     ];
-
-    # Create a simplified launch script
-    environment.etc."run-gamescope.sh" = {
-      mode = "0755";
-      text = ''
-        #!/bin/sh
-        gamescope -W 2560 -H 1440 -r 165 -f \
-          --rt --force-direct-composition \
-          --prefer-output DP-2 \
-          --adaptive-sync \
-          -- "$@"
-      '';
-    };
   };
 }

@@ -10,7 +10,7 @@
         "NIXOS_OZONE_WL" = "1";
         "MOZ_ENABLE_WAYLAND" = "1";
         "XDG_CURRENT_DESKTOP" = "niri";
-        # "DISPLAY" = ":0";
+        "DISPLAY" = ":0";
       };
 
       # Input device configuration
