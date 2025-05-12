@@ -1,4 +1,4 @@
-# Steam configuration for Wayland
+# modules/system/services/steam.nix
 { config, pkgs, lib, ... }:
 
 with lib;
@@ -7,82 +7,47 @@ let
 in
 {
   options.modules.services.steam = {
-    enable = mkEnableOption "Enable Steam client with Wayland support";
+    enable = mkEnableOption "Enable Steam with Wayland optimizations";
 
-    gamescope = {
-      enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Whether to enable Gamescope";
-      };
-
-      capSysNice = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Whether to cap system nice levels for Gamescope";
-      };
-
-      session = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Whether to enable Gamescope session";
-      };
-    };
-
-    gamemode = mkOption {
+    useGamescope = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to enable Gamemode for better performance";
-    };
-
-    extraProfile = mkOption {
-      type = types.lines;
-      default = ''
-        # Wayland support
-        # export GDK_BACKEND=x11
-        # export SDL_VIDEODRIVER=x11
-        export QT_QPA_PLATFORM=xcb
-        export STEAM_FORCE_DESKTOPUI_SCALING=1
-      
-        # Hardware acceleration
-        export LIBVA_DRIVER_NAME=nvidia
-        export __GLX_VENDOR_LIBRARY_NAME=nvidia
-      
-        # Fix black screen on launch or when alt-tabbing
-        export STEAM_DISABLE_MANGOAPP=1
-      
-        # Fix controllers
-        export SDL_GAMECONTROLLERCONFIG_FILE=/etc/steam-controller-config.txt
-      '';
-      description = "Additional environment variables for Steam";
+      description = "Whether to use Gamescope with Steam";
     };
   };
 
   config = mkIf cfg.enable {
-    # Configure Steam to work properly with Wayland
-    programs = {
-      gamescope = mkIf cfg.gamescope.enable {
-        enable = true;
-        capSysNice = cfg.gamescope.capSysNice;
-      };
+    # Enable Steam
+    programs.steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      gamescopeSession.enable = cfg.useGamescope;
 
-      steam = {
-        enable = true;
-        gamescopeSession.enable = cfg.gamescope.session;
-        package = pkgs.steam.override {
-          extraProfile = cfg.extraProfile;
-        };
+      # Only include Steam-specific environment tweaks
+      package = pkgs.steam.override {
+        extraProfile = ''
+          # Steam-specific optimizations only (not duplicating system variables)
+          export STEAM_DISABLE_MANGOAPP=1
+          export DXVK_ASYNC=1
+          export RADV_PERFTEST=aco
+          
+          # Steam controller support
+          export SDL_GAMECONTROLLERCONFIG_FILE=/etc/steam-controller-config.txt
+        '';
       };
-
-      gamemode.enable = cfg.gamemode;
     };
 
-    # Create an empty controller config file to avoid SDL warnings
-    environment.etc."steam-controller-config.txt".text = "";
+    # Enable Gamemode for better performance
+    programs.gamemode.enable = true;
 
-    # Install additional dependencies
+    # Steam-specific dependencies
     environment.systemPackages = with pkgs; [
+      mangohud
       gamemode
     ];
+
+    # Create controller configuration
+    environment.etc."steam-controller-config.txt".text = "";
   };
 }

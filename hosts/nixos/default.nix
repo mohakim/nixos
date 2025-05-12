@@ -1,4 +1,4 @@
-# Main system configuration for nixos host
+# hosts/nixos/default.nix
 { config, pkgs, lib, niri, username, ... }:
 
 {
@@ -8,33 +8,35 @@
 
     # Import system modules
     ../../modules/system/desktop/niri.nix
-    ../../modules/system/desktop/nvidia.nix
+    ../../modules/system/desktop/nvidia.nix # Unified NVIDIA+Wayland module
     ../../modules/system/desktop/keyd.nix
-    # ../../modules/system/desktop/xwayland.nix
     ../../modules/system/services/bluetooth.nix
     ../../modules/system/services/steam.nix
+    ../../modules/system/services/gamescope.nix
   ];
 
   # Host-specific configuration
   networking.hostName = "nixos";
 
-
-  # Enable all desktop modules
+  # Enable all modules in a clean, non-redundant way
   modules = {
     desktop = {
       niri.enable = true;
       niri.package = pkgs.niri-stable;
-      nvidia.enable = true;
+      nvidia-wayland.enable = true; # Combined module
       keyd.enable = true;
-      # xwayland.enable = true;
     };
     services = {
       bluetooth.enable = true;
-      steam.enable = true;
+      steam = {
+        enable = true;
+        useGamescope = true;
+      };
+      gamescope.enable = true;
     };
   };
 
-  # Hardware configuration specific to this machine
+  # Hardware configuration
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -42,16 +44,10 @@
 
   # Any additional system packages specific to this host
   environment.systemPackages = with pkgs; [
-    # Host-specific packages
+    # Media codecs and base utilities
     wireplumber
     gst_all_1.gstreamer
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
-    gst_all_1.gst-plugins-bad
-    gst_all_1.gst-plugins-ugly
-    gst_all_1.gst-libav
-    wl-gammarelay-rs
-    # xwayland-satellite
-    swww
   ];
 }
