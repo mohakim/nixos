@@ -44,18 +44,18 @@ in
           
           # Hardware acceleration
           RADV_PERFTEST=aco
-          VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
+          # VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json
           
           # Enable FSR
-          WINE_FULLSCREEN_FSR=1
-          WINE_FULLSCREEN_FSR_STRENGTH=3
+          # WINE_FULLSCREEN_FSR=1
+          # WINE_FULLSCREEN_FSR_STRENGTH=3
           
           # Gamemode integration
           STEAM_RUNTIME_PREFER_HOST_LIBRARIES=0
           LD_PRELOAD=/usr/\$LIB/libgamemodeauto.so
           
           # Wayland compatibility
-          SDL_VIDEODRIVER=x11
+          # SDL_VIDEODRIVER=wayland,x11
         '';
       })
     ];

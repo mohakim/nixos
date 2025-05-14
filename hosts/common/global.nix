@@ -81,7 +81,6 @@
 
   # System-wide environment variables
   environment.sessionVariables = {
-    "NIXOS_OZONE_WL" = "1";
     "NIXOS_CONFIG_DIR" = "$HOME/.config/nixos";
   };
 

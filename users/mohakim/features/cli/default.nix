@@ -11,6 +11,7 @@
     ../../../../modules/home/cli/helix.nix
     ../../../../modules/home/cli/starship.nix
     ../../../../modules/home/cli/zellij.nix
+    ../../../../modules/home/cli/reminders.nix
   ];
 
   # Enable the CLI tools you want

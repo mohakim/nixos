@@ -25,19 +25,12 @@ in
 
     # Configure NVIDIA hardware
     hardware.nvidia = {
-      # enable = true;
       package = cfg.package;
       modesetting.enable = true;
       powerManagement.enable = false;
       open = false;
       nvidiaSettings = true;
       forceFullCompositionPipeline = true;
-      # extraPackages = with pkgs; [
-      #   nvidia-vaapi-driver
-      #   vaapiVdpau
-      #   libvdpau-va-gl
-      # ];
-      # enable32Bit = 32;
     };
 
     # # Enable OpenGL and hardware acceleration - CRITICAL FIX
@@ -57,7 +50,8 @@ in
     # Global environment variables - CRITICAL FIX
     environment.variables = {
       # CORRECT VULKAN ICD PATH - don't use libGLX_nvidia.so
-      "VK_ICD_FILENAMES" = "${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.json";
+      # "VK_ICD_FILENAMES" = "${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.x86_64.json";
+      "VK_ICD_FILENAMES" = "/nix/store/3bg1kk8w74rnvax06xkii90ni7jx5l1k-nvidia-x11-570.144-6.12.26/share/vulkan/icd.d/nvidia_icd.x86_64.json";
 
       # Rest of your variables...
       "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
@@ -72,6 +66,17 @@ in
       "QT_QPA_PLATFORM" = "wayland";
     };
 
+    # system.activationScripts.nvidia-vulkan-permissions = ''
+    #   if [ -e ${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.x86_64.json ]; then
+    #     chmod +r ${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.x86_64.json
+    #   fi
+    # '';
+
+    environment.sessionVariables = {
+      # Supplementary Vulkan registry paths
+      "XDG_DATA_DIRS" = [ "/run/opengl-driver/share" "${config.hardware.nvidia.package.out}/share" ];
+    };
+
     # Required packages
     environment.systemPackages = with pkgs; [
       vulkan-loader
@@ -81,6 +86,7 @@ in
       wayland
       wayland-utils
       wayland-protocols
+      # mesa-utils
     ];
   };
 }
