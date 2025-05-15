@@ -1,47 +1,36 @@
+# Prayer time reminders module (KISS approach)
 { config, pkgs, lib, ... }:
 
+with lib;
 let
-  # Configuration
-  cfg = {
-    city = "Kuala Lumpur";
-    country = "Malaysia";
-    method = 3;
-    fajrDelay = 15;
-    dhuhrDelay = 15;
-    asrDelay = 15;
-    maghribDelay = 5;
-    ishaDelay = 15;
-  };
+  cfg = config.custom.cli.reminders;
 
-  # Get current date for API call
-  date = builtins.substring 0 10 (builtins.readFile
-    (pkgs.runCommand "today" { } ''date +"%d-%m-%Y" > $out''));
+  # This is the ONLY script - just for fetching
+  fetchScript = pkgs.writeShellScript "fetch-prayer-times" ''
+    #!/usr/bin/env bash
+    # Script that ONLY fetches prayer times
+    
+    # Parameters passed from Nix
+    CITY="$1"
+    COUNTRY="$2"
+    METHOD="$3"
+    OUTPUT_FILE="$4"
+    
+    # Create directory if needed
+    mkdir -p "$(dirname "$OUTPUT_FILE")"
+    
+    # Simple URL encoding for spaces
+    CITY_ENCODED=''${CITY// /%20}
+    COUNTRY_ENCODED=''${COUNTRY// /%20}
+    
+    # Get current date
+    DATE=$(date +"%d-%m-%Y")
+    
+    # Fetch prayer times
+    ${pkgs.curl}/bin/curl -s "https://api.aladhan.com/v1/timingsByCity/$DATE?city=$CITY_ENCODED&country=$COUNTRY_ENCODED&method=$METHOD" > "$OUTPUT_FILE"
+  '';
 
-  # Fetch prayer times at build time
-  prayerTimesJson = builtins.fromJSON (builtins.readFile
-    (pkgs.fetchurl {
-      url = "https://api.aladhan.com/v1/timingsByCity/${date}?city=${lib.strings.urlEncode cfg.city}&country=${lib.strings.urlEncode cfg.country}&method=${toString cfg.method}";
-      sha256 = pkgs.runCommand "prayer-times-sha" { } ''
-        ${pkgs.curl}/bin/curl -s "https://api.aladhan.com/v1/timingsByCity/${date}?city=${lib.strings.urlEncode cfg.city}&country=${lib.strings.urlEncode cfg.country}&method=${toString cfg.method}" | ${pkgs.nix}/bin/nix-hash --type sha256 --base32 --flat - > $out
-      '';
-    }));
-
-  # Extract prayer times
-  prayerTimes = prayerTimesJson.data.timings;
-
-  # Function to add delay to prayer time
-  addDelay = time: delay:
-    let
-      hour = lib.strings.toInt (builtins.substring 0 2 time);
-      minute = lib.strings.toInt (builtins.substring 3 5 time);
-      totalMinutes = hour * 60 + minute + delay;
-      newHour = totalMinutes / 60;
-      newMinute = totalMinutes - (newHour * 60);
-      formatNum = num: if num < 10 then "0${toString num}" else toString num;
-    in
-    "${formatNum newHour}:${formatNum newMinute}:00";
-
-  # List of prayers with their delays
+  # Prayer data structure
   prayers = {
     Fajr = cfg.fajrDelay;
     Dhuhr = cfg.dhuhrDelay;
@@ -49,66 +38,164 @@ let
     Maghrib = cfg.maghribDelay;
     Isha = cfg.ishaDelay;
   };
-
-  # Calculate notification times
-  notificationTimes = lib.mapAttrs
-    (prayer: delay:
-      addDelay (builtins.getAttr prayer prayerTimes) delay
-    )
-    prayers;
-
-  # Function to create a prayer service (just plays sound)
-  mkPrayerService = prayer: _: {
-    description = "${prayer} prayer reminder";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal %h/takbiir.mp3";
-    };
-  };
-
-  # Function to create a prayer timer with fixed calendar time
-  mkPrayerTimer = prayer: time: {
-    description = "${prayer} prayer reminder";
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnCalendar = "*-*-* ${time}"; # Fixed time based on build-time calculation
-      Persistent = true; # Run immediately if system was off at scheduled time
-      Unit = "prayer-${prayer}.service";
-    };
-  };
-
-  # Generate prayer services and timers
-  prayerServices = lib.mapAttrs mkPrayerService prayers;
-  prayerTimers = lib.mapAttrs mkPrayerTimer notificationTimes;
-
 in
 {
-  # Install required packages
-  environment.systemPackages = with pkgs; [
-    mpv
-  ];
+  options.custom.cli.reminders = {
+    enable = mkEnableOption "Enable prayer time reminders";
 
-  # Create the prayer reminder services
-  systemd.user.services = lib.recursiveUpdate prayerServices {
-    hourly-reminder = {
-      description = "Hourly reminder to stand up";
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal %h/hourly-reminder.mp3";
-      };
+    city = mkOption {
+      type = types.str;
+      default = "Kuala Lumpur";
+      description = "City for prayer times calculation";
+    };
+
+    country = mkOption {
+      type = types.str;
+      default = "Malaysia";
+      description = "Country for prayer times calculation";
+    };
+
+    method = mkOption {
+      type = types.int;
+      default = 3;
+      description = "Method for prayer times calculation (1-15)";
+    };
+
+    fajrDelay = mkOption {
+      type = types.int;
+      default = 15;
+      description = "Delay in minutes after Fajr prayer";
+    };
+
+    dhuhrDelay = mkOption {
+      type = types.int;
+      default = 15;
+      description = "Delay in minutes after Dhuhr prayer";
+    };
+
+    asrDelay = mkOption {
+      type = types.int;
+      default = 15;
+      description = "Delay in minutes after Asr prayer";
+    };
+
+    maghribDelay = mkOption {
+      type = types.int;
+      default = 5;
+      description = "Delay in minutes after Maghrib prayer";
+    };
+
+    ishaDelay = mkOption {
+      type = types.int;
+      default = 15;
+      description = "Delay in minutes after Isha prayer";
+    };
+
+    enableHourlyReminders = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable hourly reminders to stand up";
     };
   };
 
-  # Create the timers
-  systemd.user.timers = lib.recursiveUpdate prayerTimers {
-    hourly-reminder = {
-      description = "Hourly reminder to stand up";
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnBootSec = "5min";
-        OnUnitActiveSec = "1h";
-        Unit = "hourly-reminder.service";
+  config = mkIf cfg.enable {
+    # Install required packages
+    home.packages = with pkgs; [ mpv ];
+
+    # Create all services in ONE definition
+    systemd.user.services =
+      # Fetch service
+      {
+        fetch-prayer-times = {
+          Unit = {
+            Description = "Fetch prayer times for today";
+          };
+          Service = {
+            Type = "oneshot";
+            # Pass Nix parameters to the script
+            ExecStart = "${fetchScript} '${cfg.city}' '${cfg.country}' '${toString cfg.method}' '%h/.cache/prayer-times.json'";
+          };
+        };
+      }
+      # Merge with prayer services
+      // mapAttrs'
+        (prayer: delay:
+          nameValuePair "prayer-${prayer}" {
+            Unit = {
+              Description = "${prayer} prayer reminder";
+            };
+            Service = {
+              Type = "oneshot";
+              ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display %h/athan.mp3";
+            };
+          }
+        )
+        prayers
+      # Merge with hourly reminder if enabled
+      // optionalAttrs cfg.enableHourlyReminders {
+        hourly-reminder = {
+          Unit = {
+            Description = "Hourly reminder to stand up";
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display %h/stand.wav";
+          };
+        };
       };
-    };
+
+    # Create all timers in ONE definition
+    systemd.user.timers =
+      # Fetch timer
+      {
+        fetch-prayer-times = {
+          Unit = {
+            Description = "Fetch prayer times daily";
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+          Timer = {
+            OnBootSec = "1min";
+            OnUnitActiveSec = "24h";
+            Unit = "fetch-prayer-times.service";
+          };
+        };
+      }
+      # Merge with prayer timers
+      // mapAttrs'
+        (prayer: delay:
+          nameValuePair "prayer-${prayer}" {
+            Unit = {
+              Description = "${prayer} prayer reminder timer";
+            };
+            Install = {
+              WantedBy = [ "timers.target" ];
+            };
+            # Simple timer that runs every 24 hours
+            Timer = {
+              OnBootSec = "2min";
+              OnUnitActiveSec = "24h";
+              Unit = "prayer-${prayer}.service";
+            };
+          }
+        )
+        prayers
+      # Merge with hourly reminder if enabled
+      // optionalAttrs cfg.enableHourlyReminders {
+        hourly-reminder = {
+          Unit = {
+            Description = "Hourly reminder to stand up";
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+          Timer = {
+            OnBootSec = "5min";
+            OnUnitActiveSec = "1h";
+            Unit = "hourly-reminder.service";
+          };
+        };
+      };
   };
 }

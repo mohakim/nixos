@@ -17,6 +17,7 @@
   # Enable the CLI tools you want
   custom = {
     cli = {
+      reminders.enable = true;
       zellij.enable = true;
       fish.enable = true;
       helix.enable = true;

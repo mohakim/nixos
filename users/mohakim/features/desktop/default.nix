@@ -28,48 +28,12 @@
     grim
     slurp
     wl-clipboard
+    whatsapp-for-linux
+    teams-for-linux
+    webcord
     librewolf
-    catppuccin-gtk
-    papirus-icon-theme
     nerd-fonts.jetbrains-mono
   ];
-
-  # GTK configuration
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Catppuccin-Mocha-Standard-Blue-Dark";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "blue" ];
-        size = "standard";
-        tweaks = [ "rimless" "black" ];
-        variant = "mocha";
-      };
-    };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
-    };
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 11;
-    };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-    };
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-    };
-  };
-
-  # Cursor theme
-  home.pointerCursor = {
-    name = "Catppuccin-Mocha-Dark-Cursors";
-    package = pkgs.catppuccin-cursors.mochaDark;
-    size = 24;
-    gtk.enable = true;
-    x11.enable = true;
-  };
 
   # Set default applications
   xdg.mimeApps = {
