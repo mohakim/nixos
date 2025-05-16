@@ -21,7 +21,12 @@ in
     services.xserver.videoDrivers = [ "nvidia" ];
 
     # Critical kernel parameter for Wayland
-    boot.kernelParams = [ "nvidia-drm.modeset=1" ];
+    boot.kernelParams = [
+      "nvidia-drm.modeset=1"
+      # Add these new parameters for better memory handling
+      "nvidia.NVreg_UsePageAttributeTable=1"
+      "nvidia.NVreg_EnablePCIeGen3=1"
+    ];
 
     # Configure NVIDIA hardware
     hardware.nvidia = {
@@ -33,13 +38,26 @@ in
       forceFullCompositionPipeline = true;
     };
 
-    # # Enable OpenGL and hardware acceleration - CRITICAL FIX
+    # Fix locked memory limit for GPU operations
+    security.pam.loginLimits = [
+      {
+        domain = "*";
+        type = "soft";
+        item = "memlock";
+        value = "unlimited";
+      }
+      {
+        domain = "*";
+        type = "hard";
+        item = "memlock";
+        value = "unlimited";
+      }
+    ];
+
+    # Rest of your existing configuration...
     hardware.graphics = {
       enable = true;
       enable32Bit = true;
-      # driSupport = true;
-      # driSupport32Bit = true;
-      # These make sure the right Vulkan drivers are available
       extraPackages = with pkgs; [
         nvidia-vaapi-driver
         vaapiVdpau
@@ -47,13 +65,8 @@ in
       ];
     };
 
-    # Global environment variables - CRITICAL FIX
     environment.variables = {
-      # CORRECT VULKAN ICD PATH - don't use libGLX_nvidia.so
-      # "VK_ICD_FILENAMES" = "${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.x86_64.json";
       "VK_ICD_FILENAMES" = "/nix/store/3bg1kk8w74rnvax06xkii90ni7jx5l1k-nvidia-x11-570.144-6.12.26/share/vulkan/icd.d/nvidia_icd.x86_64.json";
-
-      # Rest of your variables...
       "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
       "LIBVA_DRIVER_NAME" = "nvidia";
       "GBM_BACKEND" = "nvidia-drm";
@@ -66,18 +79,10 @@ in
       "QT_QPA_PLATFORM" = "wayland";
     };
 
-    # system.activationScripts.nvidia-vulkan-permissions = ''
-    #   if [ -e ${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.x86_64.json ]; then
-    #     chmod +r ${config.hardware.nvidia.package.out}/share/vulkan/icd.d/nvidia_icd.x86_64.json
-    #   fi
-    # '';
-
     environment.sessionVariables = {
-      # Supplementary Vulkan registry paths
       "XDG_DATA_DIRS" = [ "/run/opengl-driver/share" "${config.hardware.nvidia.package.out}/share" ];
     };
 
-    # Required packages
     environment.systemPackages = with pkgs; [
       vulkan-loader
       vulkan-validation-layers
@@ -86,7 +91,6 @@ in
       wayland
       wayland-utils
       wayland-protocols
-      # mesa-utils
     ];
   };
 }

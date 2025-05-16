@@ -10,11 +10,13 @@
     ../../../../modules/home/desktop/alacritty.nix
     ../../../../modules/home/desktop/wl-gammarelay.nix
     ../../../../modules/home/desktop/niri.nix
+    ../../../../modules/home/desktop/wasistlos.nix
   ];
 
   # Enable the desktop modules you want
   custom = {
     desktop = {
+      whatsapp.enable = true;
       alacritty.enable = true;
       wl-gammarelay.enable = true;
       proton-ge.enable = true;
@@ -28,7 +30,6 @@
     grim
     slurp
     wl-clipboard
-    whatsapp-for-linux
     teams-for-linux
     webcord
     librewolf
