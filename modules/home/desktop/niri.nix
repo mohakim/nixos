@@ -50,10 +50,10 @@
             height = 1600;
             refresh = 165.0;
           };
-          # position = {
-          #   x = 0;
-          #   y = 0;
-          # };
+          position = {
+            x = 0;
+            y = 0;
+          };
           enable = false;
         };
       };
@@ -171,6 +171,8 @@
           action.spawn = [ "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle" ];
           allow-when-locked = true;
         };
+        "Mod+G".action.spawn = [ "toggle-audio" "headset" ];
+        "Mod+I".action.spawn = [ "toggle-audio" "family" ];
 
         "Ctrl+Escape".action.close-window = { };
 
@@ -182,8 +184,8 @@
         "Ctrl+L".action.focus-column-right = { };
 
         "Mod+J".action.move-column-left = { };
-        "Mod+K".action.move-window-down = { };
-        "Mod+I".action.move-window-up = { };
+        # "Mod+K".action.move-window-down = { };
+        # "Mod+I".action.move-window-up = { };
         "Mod+L".action.move-column-right = { };
         # "Mod+Ctrl+Left".action.move-column-left = { };
         # "Mod+Ctrl+Down".action.move-window-down = { };

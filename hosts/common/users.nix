@@ -12,6 +12,7 @@
       "video" # For screen brightness, etc.
       "audio" # For audio controls
       "input" # For input devices
+      "libvirtd" # For virtual machine management
     ];
     shell = pkgs.fish;
     uid = 1000; # Include the UID in the original definition

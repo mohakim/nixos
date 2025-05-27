@@ -13,6 +13,7 @@
     ../../modules/system/services/bluetooth.nix
     ../../modules/system/services/steam.nix
     ../../modules/system/services/gamescope.nix
+    ../../modules/system/services/virtualization.nix
   ];
 
   # Host-specific configuration
@@ -33,6 +34,7 @@
         useGamescope = true;
       };
       gamescope.enable = true;
+      virtualization.enable = true;
     };
   };
 

@@ -32,6 +32,8 @@
     wl-clipboard
     teams-for-linux
     webcord
+    vlc
+    bettercap
     librewolf
     nerd-fonts.jetbrains-mono
   ];

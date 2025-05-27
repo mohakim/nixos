@@ -29,6 +29,7 @@
     bat # Better cat
     eza # Better ls
     fzf # Fuzzy finder
+    pandoc
 
     # System monitoring
     btop # Better top

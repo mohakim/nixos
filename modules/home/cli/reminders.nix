@@ -25,32 +25,28 @@ let
   # Prayer time fetcher and transient timer creator (addressing points 13, 21, 22)
   # This script will create transient timers directly in memory without files
   setupScript = pkgs.writeShellScript "setup-prayer-times" ''
-    #!/usr/bin/env bash
+    #!${pkgs.bash}/bin/bash
     set -euo pipefail
     
     # Use proper XDG directories
     XDG_CACHE_HOME=''${XDG_CACHE_HOME:-$HOME/.cache}
     CACHE_DIR="${cacheDir}"
-    mkdir -p "$CACHE_DIR"
+    ${pkgs.coreutils}/bin/mkdir -p "$CACHE_DIR"
     
     # Get current date and time for comparison
-    CURRENT_DATE=$(date +"%d-%m-%Y")
-    CURRENT_HOUR=$(date +"%H")
-    CURRENT_MINUTE=$(date +"%M")
+    CURRENT_DATE=$(${pkgs.coreutils}/bin/date +"%d-%m-%Y")
+    CURRENT_HOUR=$(${pkgs.coreutils}/bin/date +"%H")
+    CURRENT_MINUTE=$(${pkgs.coreutils}/bin/date +"%M")
     CURRENT_TOTAL_MINUTES=$((CURRENT_HOUR * 60 + CURRENT_MINUTE))
-    
-    # Properly encode URL parameters to prevent injection
-    CITY_ENCODED=$(${pkgs.curl}/bin/curl -Gso /dev/null -w %{url_effective} --data-urlencode "city=${cfg.city}" "" | cut -c 3-)
-    COUNTRY_ENCODED=$(${pkgs.curl}/bin/curl -Gso /dev/null -w %{url_effective} --data-urlencode "country=${cfg.country}" "" | cut -c 3-)
-    
+ 
     # Fetch prayer times
-    PRAYER_DATA=$(${pkgs.curl}/bin/curl -s "https://api.aladhan.com/v1/timingsByCity/$CURRENT_DATE?city=$CITY_ENCODED&country=$COUNTRY_ENCODED&method=${toString cfg.method}")
+    PRAYER_DATA=$(${pkgs.curl}/bin/curl -s "https://api.aladhan.com/v1/timingsByCity/$CURRENT_DATE?city=Kuala%20Lumpur&country=Malaysia&method=3")
     
     # Stop all existing timers with pattern match (clean slate)
-    systemctl --user stop prayer-reminder-{fajr,dhuhr,asr,maghrib,isha}.timer 2>/dev/null || true
+    ${pkgs.systemd}/bin/systemctl --user stop prayer-reminder-{fajr,dhuhr,asr,maghrib,isha}.timer 2>/dev/null || true
     
     # Process prayer times - directly find and schedule only the next prayers (addressing point 11)
-    ${pkgs.jq}/bin/jq -r '.data.timings | to_entries[] | select(["Fajr","Dhuhr","Asr","Maghrib","Isha"] | index(.key)) | .key + " " + .value' <<< "$PRAYER_DATA" | while read PRAYER TIME; do
+    ${pkgs.jq}/bin/jq -r '.data.timings | {Fajr, Dhuhr, Asr, Maghrib, Isha} | to_entries[] | .key + " " + .value' <<< "$PRAYER_DATA" | while read PRAYER TIME; do
       # Get delay from parameters
       case "$PRAYER" in
         Fajr) DELAY=${toString cfg.fajrDelay} ;;
@@ -61,8 +57,8 @@ let
       esac
       
       # Parse time and add delay
-      HOUR=$(echo $TIME | cut -d ':' -f 1)
-      MINUTE=$(echo $TIME | cut -d ':' -f 2)
+      HOUR=$(${pkgs.coreutils}/bin/echo $TIME | ${pkgs.coreutils}/bin/cut -d ':' -f 1)
+      MINUTE=$(${pkgs.coreutils}/bin/echo $TIME | ${pkgs.coreutils}/bin/cut -d ':' -f 2)
       
       # Add delay
       TOTAL_MINUTES=$((HOUR * 60 + MINUTE + DELAY))
@@ -70,14 +66,14 @@ let
       NEW_MINUTE=$((TOTAL_MINUTES % 60))
       
       # Format time for systemd timer - correct format without seconds
-      TIMER_TIME=$(printf "*-*-* %02d:%02d" $NEW_HOUR $NEW_MINUTE)
+      TIMER_TIME=$(${pkgs.coreutils}/bin/printf "*-*-* %02d:%02d" $NEW_HOUR $NEW_MINUTE)
       
       # Calculate total minutes for comparison
       PRAYER_TOTAL_MINUTES=$((NEW_HOUR * 60 + NEW_MINUTE))
       
       # Only schedule prayers that haven't occurred yet today (addressing point 11)
       if [ $PRAYER_TOTAL_MINUTES -gt $CURRENT_TOTAL_MINUTES ]; then
-        echo "Scheduling $PRAYER for today at $TIMER_TIME"
+        ${pkgs.coreutils}/bin/echo "Scheduling $PRAYER for today at $TIMER_TIME"
         
         # Use systemd-run to create a transient timer directly (addressing points 13 and 22)
         # This avoids files completely by creating the timer in memory
@@ -88,7 +84,7 @@ let
           --service-type=oneshot \
           ${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display "$HOME/athan.mp3"
         
-        echo "Created transient timer for $PRAYER at $TIMER_TIME"
+        ${pkgs.coreutils}/bin/echo "Created transient timer for $PRAYER at $TIMER_TIME"
       fi
     done
   '';
@@ -96,24 +92,6 @@ in
 {
   options.custom.cli.reminders = {
     enable = mkEnableOption "Enable prayer time reminders";
-
-    city = mkOption {
-      type = types.str;
-      default = "Kuala Lumpur";
-      description = "City for prayer times calculation";
-    };
-
-    country = mkOption {
-      type = types.str;
-      default = "Malaysia";
-      description = "Country for prayer times calculation";
-    };
-
-    method = mkOption {
-      type = types.int;
-      default = 3;
-      description = "Method for prayer times calculation (1-15)";
-    };
 
     fajrDelay = mkOption {
       type = types.int;
@@ -173,7 +151,7 @@ in
         };
         Service = {
           Type = "oneshot";
-          ExecStart = "${setupScript}";
+          ExecStart = "${pkgs.bash}/bin/bash ${setupScript}";
         };
       };
     } // optionalAttrs cfg.enableHourlyReminders {
