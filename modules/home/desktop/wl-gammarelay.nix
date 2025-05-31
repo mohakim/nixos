@@ -112,10 +112,5 @@ in
         WantedBy = [ "timers.target" ];
       };
     };
-
-    # Install dependencies
-    home.packages = with pkgs; [
-      wl-gammarelay-rs
-    ];
   };
 }

@@ -1,5 +1,5 @@
 # Desktop environment configuration for mohakim
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -37,7 +37,6 @@
     wl-clipboard
     webcord
     librewolf
-    nerd-fonts.jetbrains-mono
   ];
 
   # Set default applications

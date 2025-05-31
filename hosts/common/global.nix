@@ -1,5 +1,5 @@
 # Common system-wide configuration shared across all hosts
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   # Enable flakes and the new nix command
@@ -88,13 +88,9 @@
   environment.systemPackages = with pkgs; [
     # Basic utilities that should be available on all systems
     git
-    wget
     curl
-    pciutils
-    usbutils
     file
     gnupg
-    home-manager
   ];
 
   # Enable fish shell system-wide

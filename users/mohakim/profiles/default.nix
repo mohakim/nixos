@@ -1,5 +1,5 @@
 # Default profile for mohakim
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   # Common configuration across all profiles
@@ -24,8 +24,6 @@
     pandoc
     bottom
     ouch
-
-    # System tools
     rustup
 
     # Fonts

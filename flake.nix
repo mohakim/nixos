@@ -16,7 +16,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, niri, home-manager, ... }:
+  outputs = { nixpkgs, niri, home-manager, ... }:
     let
       system = "x86_64-linux";
       username = "mohakim";
@@ -42,7 +42,6 @@
             inherit nixpkgs niri home-manager username overlays;
           };
           modules = [
-            # Explicitly apply overlays at the NixOS level
             { nixpkgs.overlays = overlays; }
 
             # Host-specific configuration

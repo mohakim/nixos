@@ -1,5 +1,5 @@
 # hosts/nixos/default.nix
-{ config, pkgs, lib, niri, username, ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -36,12 +36,6 @@
       gamescope.enable = true;
       virtualization.enable = true;
     };
-  };
-
-  # Hardware configuration
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
   };
 
   # Any additional system packages specific to this host

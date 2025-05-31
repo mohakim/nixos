@@ -1,5 +1,5 @@
 # Fish shell configuration module
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 
 with lib;
 let
@@ -149,10 +149,5 @@ in
         };
       };
     };
-
-    # Install dependencies
-    home.packages = with pkgs; [
-      fish
-    ];
   };
 }

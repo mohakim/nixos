@@ -1,5 +1,5 @@
 # Starship prompt configuration module
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 
 with lib;
 let
@@ -115,10 +115,5 @@ in
         };
       } // cfg.additionalModules;
     };
-
-    # Install starship
-    home.packages = with pkgs; [
-      starship
-    ];
   };
 }

@@ -1,5 +1,5 @@
 # Yazi file manager configuration
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   # Enable Yazi file manager
@@ -113,7 +113,6 @@
 
   # Install dependencies
   home.packages = with pkgs; [
-    mpv # Video player
-    file # File type detection
+    mpv
   ];
 }

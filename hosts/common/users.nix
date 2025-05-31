@@ -1,5 +1,5 @@
 # User configuration for all hosts
-{ config, pkgs, lib, username, ... }:
+{ pkgs, username, ... }:
 
 {
   # Default user account settings
