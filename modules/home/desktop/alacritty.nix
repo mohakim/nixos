@@ -15,12 +15,6 @@ in
       description = "Font size";
     };
 
-    opacity = mkOption {
-      type = types.float;
-      default = 0.65;
-      description = "Background opacity";
-    };
-
     fontFamily = mkOption {
       type = types.str;
       default = "JetBrainsMonoNL Nerd Font";
@@ -88,7 +82,6 @@ in
 
         # Window configuration
         window = {
-          opacity = cfg.opacity;
           padding = {
             x = 8;
             y = 8;

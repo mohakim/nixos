@@ -132,7 +132,7 @@ in
 
   config = mkIf cfg.enable {
     # Install required packages
-    home.packages = with pkgs; [ mpv jq ];
+    home.packages = with pkgs; [ jq ];
 
     # Create directory structure declaratively (addressing point 7)
     xdg.cacheHome = mkDefault "${config.home.homeDirectory}/.cache";

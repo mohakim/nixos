@@ -1,5 +1,5 @@
 # System-wide Niri configuration
-{ config, pkgs, lib, niri, username, ... }:
+{ config, pkgs, lib, niri, ... }:
 
 with lib;
 let
@@ -22,12 +22,6 @@ in
       enable = true;
       package = pkgs.niri-stable;
     };
-
-    environment.systemPackages = with pkgs; [
-      wl-gammarelay-rs
-      # xwayland-satellite
-      swww
-    ];
   };
 
 }

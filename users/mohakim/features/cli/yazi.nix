@@ -30,10 +30,6 @@
           { run = "hx \"$@\""; block = true; }
         ];
 
-        image = [
-          { run = "imv \"$@\""; block = false; }
-        ];
-
         video = [
           { run = "mpv \"$@\""; block = false; }
         ];
@@ -43,15 +39,7 @@
         ];
 
         pdf = [
-          { run = "zathura \"$@\""; block = false; }
-        ];
-
-        archive = [
-          # Correct format for the archive opener with proper escaping
-          {
-            run = ''sh -c 'mkdir -p "''${1%%.*}" && tar -xf "$1" -C "''${1%%.*}"'';
-            block = true;
-          }
+          { run = "librewolf \"$@\""; block = false; }
         ];
 
         fallback = [
@@ -116,31 +104,16 @@
     keymap = {
       # General
       manager.prepend_keymap = [
-        { on = [ "h" ]; run = "parent"; desc = "Go to parent directory"; }
-        { on = [ "j" ]; run = "arrow down"; desc = "Move cursor down"; }
-        { on = [ "k" ]; run = "arrow up"; desc = "Move cursor up"; }
-        { on = [ "l" ]; run = "open"; desc = "Open file"; }
         { on = [ "g" "h" ]; run = "cd ~"; desc = "Go to home directory"; }
         { on = [ "g" "d" ]; run = "cd ~/Downloads"; desc = "Go to Downloads"; }
         { on = [ "g" "c" ]; run = "cd ~/.config"; desc = "Go to config"; }
-        { on = [ "g" "j" ]; run = "arrow bottom"; desc = "Go to bottom"; }
-        { on = [ "g" "k" ]; run = "arrow top"; desc = "Go to top"; }
-        { on = [ "space" ]; run = "select --toggle=true"; desc = "Toggle selection"; }
-        { on = [ "d" "d" ]; run = "trash"; desc = "Move to trash"; }
-        { on = [ "y" "y" ]; run = "copy path"; desc = "Copy path"; }
-        { on = [ "y" "n" ]; run = "copy name"; desc = "Copy name"; }
-        { on = [ "c" "w" ]; run = "clear selections"; desc = "Clear selections"; }
       ];
     };
   };
 
   # Install dependencies
   home.packages = with pkgs; [
-    imv # Image viewer
     mpv # Video player
-    zathura # PDF viewer
     file # File type detection
-    ffmpegthumbnailer # Video thumbnails
-    poppler # PDF thumbnails
   ];
 }

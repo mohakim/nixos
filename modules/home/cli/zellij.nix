@@ -5,12 +5,10 @@ with lib;
 let
   cfg = config.custom.cli.zellij;
 
-  # Function to create a properly formatted config.kdl
+  # Function to create a properly formatted config.kdl with Super key bindings
   mkZellijConfig =
-    { theme
-    , prefixKey
-    }: ''
-      // Zellij configuration with prefix key style
+    { theme }: ''
+      // Zellij configuration with Super key bindings (no prefix needed)
       theme "${theme}"
     
       // Default configuration
@@ -20,85 +18,100 @@ let
       copy_on_select false
       scroll_buffer_size 10000
     
-      // Start in locked mode, use prefix key to enter normal mode
-      default_mode "locked"
+      // Start in normal mode - no locking needed
+      default_mode "normal"
     
-      // Keybindings using prefix key style (like tmux/screen)
+      // Direct Super key bindings using "Super" syntax - no prefix needed
       keybinds {
-        // Locked mode - only respond to the prefix key
-        locked {
-          bind "${prefixKey}" { SwitchToMode "normal"; }
-        }
-      
-        // Normal mode - accessible after pressing the prefix key
+        // Normal mode - always active
         normal {
-          // Return to locked mode with Escape or prefix again
-          // Use Esc key for returning to locked mode
-          bind "Esc" { SwitchToMode "locked"; }
-        
-          // Navigation with jkli - matches your muscle memory
-          bind "j" { MoveFocus "Left"; }
-          bind "k" { MoveFocus "Down"; }
-          bind "i" { MoveFocus "Up"; }
-          bind "l" { MoveFocus "Right"; }
+          // Pane navigation with Super+jkli
+          bind "Super j" { MoveFocus "Left"; }
+          bind "Super k" { MoveFocus "Down"; }
+          bind "Super i" { MoveFocus "Up"; }
+          bind "Super l" { MoveFocus "Right"; }
         
           // Tab navigation
-          bind "h" { GoToPreviousTab; }
-          bind ";" { GoToNextTab; }
+          bind "Super h" { GoToPreviousTab; }
+          bind "Super ;" { GoToNextTab; }
         
           // Tab management
-          bind "n" { NewTab; }
-          bind "w" { CloseTab; }
+          bind "Super n" { NewTab; }
+          bind "Super w" { CloseTab; }
         
           // Pane operations
-          bind "-" { NewPane "Down"; }
-          bind "=" { NewPane "Right"; }
-          bind "x" { CloseFocus; }
+          bind "Super -" { NewPane "Down"; }
+          bind "Super =" { NewPane "Right"; }
+          bind "Super x" { CloseFocus; }
         
           // Scrolling
-          bind "[" { ScrollUp; }
-          bind "]" { ScrollDown; }
+          bind "Super (" { ScrollUp; }
+          bind "Super )" { ScrollDown; }
         
           // Copy mode and utilities
-          bind "c" { Copy; }
-          bind "d" { Detach; }
+          bind "Super c" { Copy; }
+          bind "Super d" { Detach; }
         
-          // Layout navigation
-          bind "1" { GoToTab 1; }
-          bind "2" { GoToTab 2; }
-          bind "3" { GoToTab 3; }
-          bind "4" { GoToTab 4; }
-          bind "5" { GoToTab 5; }
+          // Tab navigation by number
+          bind "Super 1" { GoToTab 1; }
+          bind "Super 2" { GoToTab 2; }
+          bind "Super 3" { GoToTab 3; }
+          bind "Super 4" { GoToTab 4; }
+          bind "Super 5" { GoToTab 5; }
+          bind "Super 6" { GoToTab 6; }
+          bind "Super 7" { GoToTab 7; }
+          bind "Super 8" { GoToTab 8; }
+          bind "Super 9" { GoToTab 9; }
         
           // Switch to specific modes
-          bind "p" { SwitchToMode "pane"; }
-          bind "r" { SwitchToMode "resize"; }
+          bind "Super p" { SwitchToMode "pane"; }
+          bind "Super r" { SwitchToMode "resize"; }
+          
+          // Quick fullscreen toggle
+          bind "Super f" { ToggleFocusFullscreen; }
+          
+          // Search mode
+          bind "Super s" { SwitchToMode "search"; }
         }
       
         // Resize mode
         resize {
-          bind "Esc" { SwitchToMode "locked"; }
-          bind "${prefixKey}" { SwitchToMode "locked"; }
+          bind "Esc" { SwitchToMode "normal"; }
+          bind "Enter" { SwitchToMode "normal"; }
+          
+          // Resize with hjkl
           bind "h" { Resize "Increase Left"; }
           bind "j" { Resize "Increase Down"; }
           bind "k" { Resize "Increase Up"; }
           bind "l" { Resize "Increase Right"; }
+          
+          // Resize with HJKL (decrease)
           bind "H" { Resize "Decrease Left"; }
           bind "J" { Resize "Decrease Down"; }
           bind "K" { Resize "Decrease Up"; }
           bind "L" { Resize "Decrease Right"; }
+          
+          // Quick resize
           bind "=" { Resize "Increase"; }
           bind "-" { Resize "Decrease"; }
+          
+          // Super key shortcuts still work in resize mode
+          bind "Super r" { SwitchToMode "normal"; }
+          bind "Super p" { SwitchToMode "pane"; }
         }
       
         // Pane mode
         pane {
-          bind "Esc" { SwitchToMode "locked"; }
-          bind "${prefixKey}" { SwitchToMode "locked"; }
+          bind "Esc" { SwitchToMode "normal"; }
+          bind "Enter" { SwitchToMode "normal"; }
+          
+          // Navigation
           bind "h" { MoveFocus "Left"; }
           bind "j" { MoveFocus "Down"; }
           bind "k" { MoveFocus "Up"; }
           bind "l" { MoveFocus "Right"; }
+          
+          // Pane operations
           bind "n" { NewPane; }
           bind "d" { NewPane "Down"; }
           bind "r" { NewPane "Right"; }
@@ -107,7 +120,24 @@ let
           bind "z" { TogglePaneFrames; }
           bind "w" { ToggleFloatingPanes; }
           bind "e" { TogglePaneEmbedOrFloating; }
+          
+          // Switch modes
           bind "c" { SwitchToMode "resize"; }
+          
+          // Super key shortcuts still work in pane mode
+          bind "Super p" { SwitchToMode "normal"; }
+          bind "Super r" { SwitchToMode "resize"; }
+        }
+        
+        // Search mode
+        search {
+          bind "Esc" { SwitchToMode "normal"; }
+          bind "Enter" { SwitchToMode "normal"; }
+          
+          // Super key shortcuts work in search mode
+          bind "Super s" { SwitchToMode "normal"; }
+          bind "Super p" { SwitchToMode "pane"; }
+          bind "Super r" { SwitchToMode "resize"; }
         }
       }
     '';
@@ -161,12 +191,6 @@ in
       default = "catppuccin-macchiato";
       description = "Zellij theme";
     };
-
-    prefixKey = mkOption {
-      type = types.str;
-      default = "Ctrl g";
-      description = "Prefix key to enter Zellij command mode";
-    };
   };
 
   config = mkIf cfg.enable {
@@ -174,11 +198,9 @@ in
       enable = true;
     };
 
-    # Create the config.kdl file with precise KDL syntax
+    # Create the config.kdl file with Super key bindings
     xdg.configFile."zellij/config.kdl".text = mkZellijConfig {
       theme = cfg.theme;
-      prefixKey = cfg.prefixKey;
     };
   };
 }
-

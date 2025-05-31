@@ -8,6 +8,7 @@
 
     # Import home-manager modules for desktop
     ../../../../modules/home/desktop/alacritty.nix
+    ../../../../modules/home/desktop/mako.nix
     ../../../../modules/home/desktop/wl-gammarelay.nix
     ../../../../modules/home/desktop/niri.nix
     ../../../../modules/home/desktop/wasistlos.nix
@@ -16,6 +17,7 @@
   # Enable the desktop modules you want
   custom = {
     desktop = {
+      mako.enable = true;
       whatsapp.enable = true;
       alacritty.enable = true;
       wl-gammarelay.enable = true;
@@ -26,14 +28,14 @@
   # Common desktop packages
   home.packages = with pkgs; [
     fuzzel
+    krita
+    obsidian
+    element-desktop
     swww
     grim
     slurp
     wl-clipboard
-    teams-for-linux
     webcord
-    vlc
-    bettercap
     librewolf
     nerd-fonts.jetbrains-mono
   ];
@@ -46,12 +48,9 @@
       "x-scheme-handler/http" = "librewolf.desktop";
       "x-scheme-handler/https" = "librewolf.desktop";
       "x-scheme-handler/about" = "librewolf.desktop";
+      "x-scheme-handler/io.element.desktop" = "element-desktop.desktop";
       "x-scheme-handler/unknown" = "librewolf.desktop";
-      "application/pdf" = "org.pwmt.zathura.desktop";
-      "image/png" = "imv.desktop";
-      "image/jpeg" = "imv.desktop";
-      "image/gif" = "imv.desktop";
-      "image/svg+xml" = "imv.desktop";
+      "application/pdf" = "librewolf.desktop";
       "video/mp4" = "mpv.desktop";
       "video/x-matroska" = "mpv.desktop";
       "video/webm" = "mpv.desktop";

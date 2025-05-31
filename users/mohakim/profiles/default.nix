@@ -2,14 +2,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [
-    # Import the personal profile
-    ./personal.nix
-
-    # You can add other profiles here and toggle them as needed
-    # ./work.nix
-  ];
-
   # Common configuration across all profiles
   home.sessionVariables = {
     EDITOR = "hx";
@@ -24,20 +16,17 @@
   # Common packages used across all profiles
   home.packages = with pkgs; [
     # Essential CLI tools
-    ripgrep # Better grep
-    fd # Better find
-    bat # Better cat
-    eza # Better ls
-    fzf # Fuzzy finder
+    ripgrep
+    fd
+    bat
+    eza
+    fzf
     pandoc
+    bottom
+    ouch
 
-    # System monitoring
-    btop # Better top
-
-    # Compression
-    zip
-    unzip
-    p7zip
+    # System tools
+    rustup
 
     # Fonts
     nerd-fonts.jetbrains-mono

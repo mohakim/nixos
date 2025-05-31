@@ -126,35 +126,32 @@ in
             # Use the exact device names from your pw-cli output
             set family_name "alsa_output.pci-0000_05_00.6.analog-stereo"
             set headset_name "alsa_output.usb-Logitech_G733_Gaming_Headset-00.analog-stereo"
-    
+            set earbuds_name "bluez_output.3C_B0_ED_50_C0_1C.1"
+
             # Dynamically get IDs using pw-cli info
             set family_id (pw-cli info $family_name | head -n 1 | awk '{print $2}')
             set headset_id (pw-cli info $headset_name | head -n 1 | awk '{print $2}')
-    
-            # Logic for toggling between the two sinks
-            if test "$argv[1]" = "family"
+            set earbuds_id (pw-cli info $earbuds_name | head -n 1 | awk '{print $2}')
+
+            # Logic for switching between the three sinks
+            switch "$argv[1]"
+              case "family"
                 wpctl set-default "$family_id"
-            else if test "$argv[1]" = "headset"
+              case "headset"
                 wpctl set-default "$headset_id"
-            else
-                # Get current default sink - improved pattern matching
-                set current_default (wpctl status | grep -E '^\s*\*\s+[0-9]+\.' | awk '{print $2}' | tr -d '.')
-        
-                if test "$current_default" = "$family_id"
-                    wpctl set-default "$headset_id"
-                else
-                    wpctl set-default "$family_id"
-                end
+              case "earbuds"
+                wpctl set-default "$earbuds_id"
+              case "*"
+                  echo "Unknown audio device"
             end
           '';
-          description = "Toggle between Family speakers and Gaming Headset or set a specific one";
+          description = "Switch between Family speakers, Gaming Headset, and Bluetooth Earbuds";
         };
       };
     };
 
     # Install dependencies
     home.packages = with pkgs; [
-      starship
       fish
     ];
   };

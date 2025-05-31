@@ -157,7 +157,6 @@ in
             space = {
               f = "file_picker";
               b = "buffer_picker";
-              "/" = "toggle_comments";
               h = "hover";
               d = "goto_definition";
               r = "rename_symbol";
@@ -168,10 +167,6 @@ in
 
           select = {
             ";" = [ "collapse_selection" "keep_primary_selection" "normal_mode" ];
-
-            space = {
-              "/" = "toggle_comments";
-            };
           };
         };
       };
@@ -184,73 +179,6 @@ in
             name = "rust";
             auto-format = cfg.enableAutoFormat;
             language-servers = [ "rust-analyzer" ];
-          }
-
-          # TypeScript configuration
-          {
-            name = "typescript";
-            auto-format = cfg.enableAutoFormat;
-            language-servers = [
-              "typescript-language-server"
-              "tailwindcss-react"
-            ];
-            formatter = {
-              command = "npx";
-              args = [ "prettier" "--parser" "typescript" ];
-            };
-          }
-
-          # TSX configuration
-          {
-            name = "tsx";
-            auto-format = cfg.enableAutoFormat;
-            language-servers = [
-              "typescript-language-server"
-              "tailwindcss-react"
-            ];
-            formatter = {
-              command = "npx";
-              args = [ "prettier" "--parser" "typescript" ];
-            };
-          }
-
-          # CSS configuration
-          {
-            name = "css";
-            auto-format = cfg.enableAutoFormat;
-            language-servers = [
-              "vscode-css"
-              "tailwindcss-react"
-            ];
-          }
-
-          # JSX configuration
-          {
-            name = "jsx";
-            auto-format = cfg.enableAutoFormat;
-            grammar = "javascript";
-            language-servers = [
-              "typescript-language-server"
-              "tailwindcss-react"
-            ];
-            formatter = {
-              command = "npx";
-              args = [ "prettier" "--parser" "typescript" ];
-            };
-          }
-
-          # JavaScript configuration
-          {
-            name = "javascript";
-            auto-format = cfg.enableAutoFormat;
-            language-servers = [
-              "typescript-language-server"
-              "tailwindcss-react"
-            ];
-            formatter = {
-              command = "npx";
-              args = [ "prettier" "--parser" "typescript" ];
-            };
           }
 
           # Nix configuration
@@ -276,18 +204,6 @@ in
               };
             };
           };
-
-          "vscode-css" = {
-            command = "vscode-css-languageserver";
-            args = [ "--stdio" ];
-            config = { };
-          };
-
-          "tailwindcss-react" = {
-            command = "tailwindcss-language-server";
-            args = [ "--stdio" ];
-            config = { };
-          };
         };
       };
     };
@@ -295,13 +211,11 @@ in
     # Install required dependencies
     home.packages = with pkgs; [
       # Language servers
-      nodePackages.typescript-language-server
-      nodePackages.vscode-langservers-extracted
       tailwindcss-language-server
+      nil
 
       # Formatters
       nixpkgs-fmt
-      nodePackages.prettier
     ] ++ cfg.extraPackages;
   };
 }
