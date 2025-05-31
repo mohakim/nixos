@@ -1,5 +1,11 @@
 { ... }:
 
+let
+  assets = builtins.path {
+    path = ../../../assets;
+    name = "assets";
+  };
+in
 {
   programs.niri = {
     settings = {
@@ -80,7 +86,7 @@
       # Startup applications
       spawn-at-startup = [
         { command = [ "swww-daemon" ]; }
-        { command = [ "sh" "-c" "sleep 1 && swww img ../../../assets/wallpapers/blackhole.png" ]; }
+        { command = [ "sh" "-c" "sleep 1 && swww img ${assets}/wallpapers/blackhole.png" ]; }
         { command = [ "wl-gammarelay-rs" "run" ]; }
       ];
 

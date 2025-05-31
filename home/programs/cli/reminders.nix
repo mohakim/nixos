@@ -3,6 +3,11 @@
 let
   cacheDir = "${config.xdg.cacheHome}/prayer-times";
 
+  assets = builtins.path {
+    path = ../../../assets;
+    name = "assets";
+  };
+
   # Prayer time setup script
   setupScript = pkgs.writeShellScript "setup-prayer-times" ''
     #!${pkgs.bash}/bin/bash
@@ -48,7 +53,7 @@ let
           --description="$PRAYER prayer reminder" \
           --on-calendar="$TIMER_TIME" \
           --service-type=oneshot \
-          ${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display "../../../assets/audio/athan.mp3"
+          ${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display "${assets}/audio/athan.mp3"
         
         ${pkgs.coreutils}/bin/echo "Created transient timer for $PRAYER at $TIMER_TIME"
       fi
@@ -78,7 +83,7 @@ in
         Unit.Description = "Hourly reminder to stand up";
         Service = {
           Type = "oneshot";
-          ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display ../../../assets/audio/stand.wav";
+          ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display ${assets}/audio/stand.wav";
         };
       };
     };
