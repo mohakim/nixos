@@ -80,7 +80,7 @@
       # Startup applications
       spawn-at-startup = [
         { command = [ "swww-daemon" ]; }
-        { command = [ "sh" "-c" "sleep 1 && swww img /home/mohakim/Downloads/blackhole.png" ]; }
+        { command = [ "sh" "-c" "sleep 1 && swww img ../../../assets/wallpapers/blackhole.png" ]; }
         { command = [ "wl-gammarelay-rs" "run" ]; }
       ];
 

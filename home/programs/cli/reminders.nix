@@ -48,7 +48,7 @@ let
           --description="$PRAYER prayer reminder" \
           --on-calendar="$TIMER_TIME" \
           --service-type=oneshot \
-          ${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display "$HOME/athan.mp3"
+          ${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display "../../../assets/audio/athan.mp3"
         
         ${pkgs.coreutils}/bin/echo "Created transient timer for $PRAYER at $TIMER_TIME"
       fi
@@ -78,7 +78,7 @@ in
         Unit.Description = "Hourly reminder to stand up";
         Service = {
           Type = "oneshot";
-          ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display $HOME/stand.wav";
+          ExecStart = "${pkgs.mpv}/bin/mpv --no-terminal --no-audio-display ../../../assets/audio/stand.wav";
         };
       };
     };
