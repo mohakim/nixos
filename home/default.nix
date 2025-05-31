@@ -82,7 +82,6 @@
 
       # System operations
       rebuild = "cd ~/.config/nixos && sudo nixos-rebuild switch --flake .#nixos";
-      hm = "cd ~/.config/nixos && home-manager switch --flake .#mohakim@nixos";
       edit = "cd ~/.config/nixos && hx";
       update = "cd ~/.config/nixos && nix flake update && rebuild";
 

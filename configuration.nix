@@ -1,4 +1,4 @@
-{ config, pkgs, lib, niri, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
@@ -144,7 +144,7 @@
     };
 
     variables = {
-      "XDG_DATA_DIRS" = [ "/run/opengl-driver/share" ];
+      "XDG_DATA_DIRS" = lib.mkForce [ "/run/opengl-driver/share" ];
     };
 
     systemPackages = with pkgs; [
@@ -152,12 +152,7 @@
       curl
       file
       gnupg
-      vulkan-loader
-      vulkan-validation-layers
-      vulkan-tools
-      wayland
-      wayland-utils
-      wayland-protocols
+      home-manager
     ];
   };
 
@@ -165,17 +160,6 @@
   programs = {
     fish.enable = true;
     command-not-found.enable = false;
-  };
-
-  # Hardware acceleration
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      nvidia-vaapi-driver
-      vaapiVdpau
-      libvdpau-va-gl
-    ];
   };
 
   # Enable modules
