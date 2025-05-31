@@ -1,105 +1,75 @@
 {
-  description = "NixOS configuration with modular home-manager integration";
+  description = "Balanced NixOS configuration for single user/machine";
 
   inputs = {
-    # Core dependencies
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    # Niri window manager
     niri.url = "github:sodiboo/niri-flake";
     niri.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Home Manager for user configuration
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, niri, home-manager, ... }:
-    let
+  outputs = { nixpkgs, niri, home-manager, ... }: {
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      username = "mohakim";
+      specialArgs = { inherit niri; };
+      modules = [
+        # Core system configuration
+        ./configuration.nix
+        ./hardware.nix
 
-      # Import all overlays from the overlays directory
-      # This returns a list of overlay functions
-      overlays = import ./overlays ++ [
-        niri.overlays.niri
-      ];
+        # Niri module
+        niri.nixosModules.niri
 
-      # Create a properly overlaid pkgs
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = overlays;
-      };
+        # Home Manager integration
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.mohakim = import ./home;
+          home-manager.extraSpecialArgs = { inherit niri; };
+          home-manager.backupFileExtension = "backup";
+        }
 
-      # Helper function to create system configurations
-      mkSystem = { hostname, extraModules ? [ ] }:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit nixpkgs niri home-manager username overlays;
-          };
-          modules = [
-            { nixpkgs.overlays = overlays; }
-
-            # Host-specific configuration
-            ./hosts/${hostname}
-            # Include common modules
-            ./hosts/common/global.nix
-            ./hosts/common/users.nix
-
-            # Include Niri module
-            niri.nixosModules.niri
-
-            # Add Home Manager as NixOS module
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${username} = import ./users/${username}/default.nix;
-              home-manager.extraSpecialArgs = {
-                inherit niri overlays username;
+        # Inline overlays
+        {
+          nixpkgs.overlays = [
+            niri.overlays.niri
+            (final: prev: {
+              proton-ge-custom = prev.stdenv.mkDerivation rec {
+                pname = "proton-ge-custom";
+                version = "GE-Proton9-27";
+                src = prev.fetchurl {
+                  url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${version}/${version}.tar.gz";
+                  sha256 = "sha256-u9MQi6jc8XPdKmDvTrG40H4Ps8mhBhtbkxDFNVwVGTc=";
+                };
+                buildCommand = ''
+                  mkdir -p $out/proton-ge-custom
+                  tar -xzf $src --strip-components=1 -C $out/proton-ge-custom
+                  mkdir -p $out/share/steam/compatibilitytools.d
+                  ln -s $out/proton-ge-custom $out/share/steam/compatibilitytools.d/${version}
+                '';
+                meta = with prev.lib; {
+                  description = "Compatibility tool for Steam Play based on Wine and additional components";
+                  homepage = "https://github.com/GloriousEggroll/proton-ge-custom";
+                  license = licenses.bsd3;
+                  platforms = platforms.linux;
+                };
               };
-              home-manager.backupFileExtension = "backup";
-            }
-          ] ++ extraModules;
-        };
-    in
-    {
-      # NixOS system configurations
-      nixosConfigurations = {
-        # Current machine
-        nixos = mkSystem {
-          hostname = "nixos";
-        };
-      };
-
-      # Standalone home-manager configurations
-      homeConfigurations = {
-        # Current user configuration
-        "${username}@nixos" = home-manager.lib.homeManagerConfiguration {
-          # Use the overlaid pkgs
-          inherit pkgs;
-
-          extraSpecialArgs = {
-            inherit niri overlays username;
-          };
-          modules = [
-            ./users/${username}/home.nix
-            niri.homeModules.config
+            })
           ];
-        };
-      };
-
-      # Development shell for Nix tools
-      devShells.${system}.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          nixpkgs-fmt
-          nil # Nix LSP
-          home-manager # For home-manager CLI
-        ];
-      };
+        }
+      ];
     };
+
+    devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+      buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
+        nixpkgs-fmt
+        nil
+        home-manager
+      ];
+    };
+  };
 }
