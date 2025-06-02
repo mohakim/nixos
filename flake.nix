@@ -21,7 +21,6 @@
         ./configuration.nix
         ./hardware.nix
         niri.nixosModules.niri
-        textfox.homeManagerModules.default
 
         # Home Manager integration
         home-manager.nixosModules.home-manager

@@ -1,7 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, textfox, ... }:
 
 {
   imports = [
+    textfox.homeManagerModules.default
+
     # CLI programs
     ./programs/cli/alacritty.nix
     ./programs/cli/fish.nix
@@ -18,6 +20,18 @@
     ./programs/desktop/wl-gammarelay.nix
     # ./programs/desktop/librewolf.nix
   ];
+
+  textfox = {
+    enable = true;
+    profile = "sd8mel26.default";
+    config = {
+      displayNavButtons = true;
+      font = {
+        family = "JetBrainsMono Nerd Font";
+        size = "16px";
+      };
+    };
+  };
 
   home = {
     username = "mohakim";
@@ -69,17 +83,6 @@
       package = pkgs.catppuccin-cursors.mochaLavender;
     };
 
-    textfox = {
-      enable = true;
-      profile = "sd8mel26.default";
-      config = {
-        font = {
-          family = "JetBrainsMono Nerd Font";
-          size = "16px";
-        };
-      };
-    };
-
     shellAliases = {
       # Directory navigation
       ".." = "cd ..";
@@ -114,6 +117,27 @@
   };
 
   programs.home-manager.enable = true;
+
+  # Copy textfox files from firefox to librewolf directory
+  home.activation.copyTextfoxToLibrewolf = ''
+    FIREFOX_DIR="$HOME/.mozilla/firefox/sd8mel26.default"
+    LIBREWOLF_DIR="$HOME/.mozilla/librewolf/sd8mel26.default"
+
+    if [ -d "$FIREFOX_DIR" ]; then
+      echo "Copying textfox files from Firefox to LibreWolf..."
+
+      # Create librewolf directory if it doesn't exist
+      mkdir -p "$LIBREWOLF_DIR"
+
+      # Copy all contents from firefox profile to librewolf profile
+      cp -r "$FIREFOX_DIR"/* "$LIBREWOLF_DIR/" 2>/dev/null || true
+
+      # Remove the firefox directory
+      rm -rf "$HOME/.mozilla/firefox"
+
+      echo "Textfox files copied to LibreWolf and Firefox directory removed."
+    fi
+  '';
 
   # Font configuration
   fonts.fontconfig.enable = true;
