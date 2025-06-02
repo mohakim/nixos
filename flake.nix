@@ -9,19 +9,19 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    textfox.url = "github:adriankarlen/textfox";
   };
 
-  outputs = { nixpkgs, niri, home-manager, ... }: {
+  outputs = { nixpkgs, niri, home-manager, textfox, ... }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit niri; };
+      specialArgs = { inherit niri textfox; };
       modules = [
         # Core system configuration
         ./configuration.nix
         ./hardware.nix
-
-        # Niri module
         niri.nixosModules.niri
+        textfox.homeManagerModules.default
 
         # Home Manager integration
         home-manager.nixosModules.home-manager
@@ -29,7 +29,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.mohakim = import ./home;
-          home-manager.extraSpecialArgs = { inherit niri; };
+          home-manager.extraSpecialArgs = { inherit niri textfox; };
           home-manager.backupFileExtension = "backup";
         }
 

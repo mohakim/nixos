@@ -16,7 +16,7 @@
     ./programs/desktop/niri.nix
     ./programs/desktop/proton-ge.nix
     ./programs/desktop/wl-gammarelay.nix
-    ./programs/desktop/librewolf.nix
+    # ./programs/desktop/librewolf.nix
   ];
 
   home = {
@@ -59,10 +59,26 @@
 
       # Font
       nerd-fonts.jetbrains-mono
-
-      #Cursor
-      catppuccin-cursors.mochaLavender
     ];
+
+    pointerCursor = {
+      gtk.enable = true;
+      x11.enable = true;
+      name = "Catppuccin-Mocha-Lavender-Cursors";
+      size = 24; # Adjust size as needed (16, 24, 32, 48)
+      package = pkgs.catppuccin-cursors.mochaLavender;
+    };
+
+    textfox = {
+      enable = true;
+      profile = "sd8mel26.default";
+      config = {
+        font = {
+          family = "JetBrainsMono Nerd Font";
+          size = "16px";
+        };
+      };
+    };
 
     shellAliases = {
       # Directory navigation

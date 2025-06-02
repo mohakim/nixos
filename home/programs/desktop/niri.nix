@@ -20,6 +20,11 @@ in
         mouse.enable = true;
       };
 
+      cursor = {
+        theme = "catppuccin-mocha-lavender-cursors";
+        size = 24;
+      };
+
       # Output configuration
       outputs = {
         "DP-2" = {
