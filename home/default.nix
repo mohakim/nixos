@@ -16,6 +16,7 @@
     ./programs/desktop/niri.nix
     ./programs/desktop/proton-ge.nix
     ./programs/desktop/wl-gammarelay.nix
+    ./programs/desktop/librewolf.nix
   ];
 
   home = {
@@ -56,8 +57,11 @@
       wl-clipboard
       mpv
 
-      # Fonts
+      # Font
       nerd-fonts.jetbrains-mono
+
+      #Cursor
+      catppuccin-cursors.mochaLavender
     ];
 
     shellAliases = {
@@ -120,11 +124,6 @@
 
   # Enhanced CLI tools
   programs = {
-    less = {
-      enable = true;
-      keys = "LESS = -R";
-    };
-
     bat = {
       enable = true;
       config = {
