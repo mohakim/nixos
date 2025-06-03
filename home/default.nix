@@ -30,6 +30,20 @@
         family = "JetBrainsMono Nerd Font";
         size = "16px";
       };
+
+      # Fix for issue #124 - Title positioning and remove dark backgrounds
+      extraConfig = ''
+        /* Fix for issue #124 - Title positioning and remove dark backgrounds */
+        
+        /* Fix main title positioning - much more aggressive adjustment */
+        #tabbrowser-tabbox::before {
+          margin: -1.398rem 0.5rem !important; /* Much smaller negative margin + horizontal offset */
+          // background-color: transparent !important; /* Remove dark rectangle */
+          text-shadow: none !important; /* Remove text shadow */
+          top: auto !important; /* Reset absolute positioning */
+          transform: translateY(0) !important; /* Reset any transforms */
+        }
+      '';
     };
   };
 
