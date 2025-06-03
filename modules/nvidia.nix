@@ -9,7 +9,7 @@ in
     enable = mkEnableOption "NVIDIA driver optimized for Wayland";
     package = mkOption {
       type = types.package;
-      default = config.boot.kernelPackages.nvidiaPackages.stable;
+      default = config.boot.kernelPackages.nvidiaPackages.beta;
       description = "The NVIDIA driver package to use";
     };
   };
@@ -42,6 +42,8 @@ in
     # NVIDIA and graphics-related packages
     environment.systemPackages = with pkgs; [
       vulkan-loader
+      vulkan-tools
+      vulkan-validation-layers
       wayland-protocols
     ];
   };

@@ -4,7 +4,7 @@ let
   cacheDir = "${config.xdg.cacheHome}/prayer-times";
 
   assets = builtins.path {
-    path = ../../../assets;
+    path = ../../assets;
     name = "assets";
   };
 

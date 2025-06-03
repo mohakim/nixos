@@ -141,6 +141,7 @@
 
       # Vulkan
       "VK_ICD_FILENAMES" = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.x86_64.json";
+      "VK_LAYER_PATH" = "/run/opengl-driver/share/vulkan/explicit_layer.d";
     };
 
     variables = {
