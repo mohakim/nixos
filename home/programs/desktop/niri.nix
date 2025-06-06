@@ -97,7 +97,7 @@ in
         ];
 
         environment = {
-          "DISPLAY" = ":0";
+          "DISPLAY" = ":1";
         };
 
         # Window rules

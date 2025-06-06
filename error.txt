@@ -1,0 +1,1 @@
+Error: Os(OsError { line: 764, file: "/build/alacritty-0.15.1-vendor/winit-0.30.9/src/platform_impl/linux/mod.rs", error: Misc("neither WAYLAND_DISPLAY nor WAYLAND_SOCKET nor DISPLAY is set.") })

@@ -4,8 +4,7 @@
   systemd.user.services.xwayland-satellite = {
     Unit = {
       Description = "Xwayland outside your Wayland";
-      PartOf = "graphical-session.target";
-      After = "graphical-session.target";
+      After = [ "graphical-session.target" ];
       ConditionEnvironment = "WAYLAND_DISPLAY";
     };
     Service = {
@@ -15,7 +14,7 @@
       RestartSec = "1";
     };
     Install = {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = [ "default.target" ];
     };
   };
 }

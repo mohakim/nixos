@@ -65,6 +65,9 @@
 
       # Font
       nerd-fonts.jetbrains-mono
+
+      # Icons
+      papirus-icon-theme
     ];
 
     pointerCursor = {

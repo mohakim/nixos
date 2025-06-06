@@ -4,8 +4,7 @@
   systemd.user.services.wl-gammarelay = {
     Unit = {
       Description = "DBus interface to control display temperature and brightness under wayland";
-      PartOf = "graphical-session.target";
-      After = "graphical-session.target";
+      After = [ "graphical-session.target" ];
       ConditionEnvironment = "WAYLAND_DISPLAY";
     };
     Service = {
@@ -15,7 +14,7 @@
       Restart = "on-failure";
     };
     Install = {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = [ "default.target" ];
     };
   };
 }

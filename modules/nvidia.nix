@@ -25,7 +25,7 @@ in
       powerManagement.enable = false;
       open = false;
       nvidiaSettings = true;
-      forceFullCompositionPipeline = true;
+      forceFullCompositionPipeline = false;
     };
 
     # Hardware acceleration (moved from configuration.nix)
@@ -45,6 +45,11 @@ in
       vulkan-tools
       vulkan-validation-layers
       wayland-protocols
+    ];
+
+    # Create shader cache directory
+    systemd.tmpfiles.rules = [
+      "d /tmp/nvidia-shader-cache 0755 - - -"
     ];
   };
 }
