@@ -5,7 +5,6 @@
     Unit = {
       Description = "Xwayland outside your Wayland";
       After = [ "graphical-session.target" ];
-      ConditionEnvironment = "WAYLAND_DISPLAY";
     };
     Service = {
       Type = "simple";

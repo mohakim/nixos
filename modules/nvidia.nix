@@ -9,7 +9,7 @@ in
     enable = mkEnableOption "NVIDIA driver optimized for Wayland";
     package = mkOption {
       type = types.package;
-      default = config.boot.kernelPackages.nvidiaPackages.beta;
+      default = config.boot.kernelPackages.nvidiaPackages.stable;
       description = "The NVIDIA driver package to use";
     };
   };
@@ -25,7 +25,7 @@ in
       powerManagement.enable = false;
       open = false;
       nvidiaSettings = true;
-      forceFullCompositionPipeline = false;
+      forceFullCompositionPipeline = true;
     };
 
     # Hardware acceleration (moved from configuration.nix)
@@ -45,11 +45,6 @@ in
       vulkan-tools
       vulkan-validation-layers
       wayland-protocols
-    ];
-
-    # Create shader cache directory
-    systemd.tmpfiles.rules = [
-      "d /tmp/nvidia-shader-cache 0755 - - -"
     ];
   };
 }

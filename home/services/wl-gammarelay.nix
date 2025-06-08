@@ -5,7 +5,6 @@
     Unit = {
       Description = "DBus interface to control display temperature and brightness under wayland";
       After = [ "graphical-session.target" ];
-      ConditionEnvironment = "WAYLAND_DISPLAY";
     };
     Service = {
       Type = "dbus";

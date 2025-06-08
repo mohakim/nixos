@@ -39,6 +39,7 @@
 
     packages = with pkgs; [
       xwayland-satellite
+      xdg-desktop-portal
 
       # CLI essentials
       ripgrep
@@ -62,6 +63,7 @@
       slurp
       wl-clipboard
       mpv
+      teams-for-linux
 
       # Font
       nerd-fonts.jetbrains-mono
@@ -134,6 +136,10 @@
         syntax-theme = "Monokai Extended";
       };
     };
+  };
+
+  programs.direnv = {
+    enable = true;
   };
 
   # Enhanced CLI tools

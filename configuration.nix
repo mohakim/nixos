@@ -38,9 +38,6 @@
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_UsePageAttributeTable=1"
       "nvidia.NVreg_EnablePCIeGen3=1"
-      "nvidia.NVreg_EnableGpuFirmware=0"
-      "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
-      "nvidia.NVreg_DynamicPowerManagement=0x02"
     ];
   };
 
@@ -133,7 +130,6 @@
       "XDG_CURRENT_DESKTOP" = "niri";
       "XDG_SESSION_TYPE" = "wayland";
       "QT_QPA_PLATFORM" = "wayland";
-      "WAYLAND_DISPLAY" = "wayland-1";
 
       # NVIDIA specific variables
       "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
@@ -146,14 +142,6 @@
       # Vulkan
       "VK_ICD_FILENAMES" = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.x86_64.json";
       "VK_LAYER_PATH" = "/run/opengl-driver/share/vulkan/explicit_layer.d";
-
-      # Memory Optimizations
-      "__GL_THREADED_OPTIMIZATIONS" = "1";
-      "__GL_SHADER_DISK_CAHCE" = "1";
-      "__GL_SHADER_DISK_CACHE_SKIP_CLEANUP" = "1";
-      "__GL_SHADER_DISK_CACHE_PATH" = "/tmp/nvidia-shader-cache";
-      "__GL_MaxFramesAllowed" = "1";
-      "__GL_SYNC_TO_VBLANK" = "0";
     };
 
     variables = {
