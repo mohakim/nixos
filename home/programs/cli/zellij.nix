@@ -4,7 +4,7 @@
   programs.zellij.enable = true;
 
   xdg.configFile."zellij/config.kdl".text = ''
-    // Zellij configuration with Super key bindings
+    // Optimized Zellij configuration with conflict-free Super key bindings
     theme "catppuccin-macchiato"
 
     pane_frames true
@@ -16,102 +16,104 @@
 
     keybinds {
       normal {
-        // Pane navigation with Super+jkli
-        bind "Super j" { MoveFocus "Left"; }
-        bind "Super k" { MoveFocus "Down"; }
-        bind "Super i" { MoveFocus "Up"; }
-        bind "Super l" { MoveFocus "Right"; }
+        // === PANE NAVIGATION (Conflict-free vim-like) ===
+        bind "Super j" { MoveFocus "Left"; }      // J for left
+        bind "Super k" { MoveFocus "Down"; }      // K for down
+        bind "Super i" { MoveFocus "Up"; }        // I for up  
+        bind "Super l" { MoveFocus "Right"; }     // L for right
       
-        // Tab navigation
-        bind "Super h" { GoToPreviousTab; }
-        bind "Super ;" { GoToNextTab; }
+        // === TAB NAVIGATION (Safe adjacent keys) ===
+        bind "Super q" { GoToPreviousTab; }       // Q for previous
+        bind "Super w" { GoToNextTab; }           // W for next
       
-        // Tab management
-        bind "Super n" { NewTab; }
-        bind "Super w" { CloseTab; }
+        // === CREATION (Safe keys) ===
+        bind "Super t" { NewTab; }                // T for Tab
+        bind "Super s" { NewPane "Down"; }        // S for Split down
+        bind "Super v" { NewPane "Right"; }       // V for Vertical split
       
-        // Pane operations
-        bind "Super -" { NewPane "Down"; }
-        bind "Super =" { NewPane "Right"; }
-        bind "Super x" { CloseFocus; }
+        // === DESTRUCTION ===
+        bind "Super x" { CloseFocus; }            // X for close pane
+        bind "Super z" { CloseTab; }              // Z for close tab
       
-        // Scrolling
-        bind "Super (" { ScrollUp; }
-        bind "Super )" { ScrollDown; }
+        // === TAB JUMPING (Safe top row keys) ===
+        bind "Super u" { GoToTab 1; }             // Safe keys, no conflicts
+        bind "Super o" { GoToTab 2; }             // 
+        bind "Super p" { GoToTab 3; }             //
+        bind "Super y" { GoToTab 4; }             // 
+        bind "Super e" { GoToTab 5; }             // Extra if needed
       
-        // Copy mode and utilities
-        bind "Super c" { Copy; }
-        bind "Super d" { Detach; }
+        // === MODES (Conflict-free alternatives) ===
+        bind "Super n" { SwitchToMode "resize"; } // N for resizing Numbers
+        bind "Super a" { SwitchToMode "pane"; }   // A for pane Arrangement
+        bind "Super g" { ToggleFocusFullscreen; } // G for Go big/fullscreen
       
-        // Tab navigation by number
-        bind "Super 1" { GoToTab 1; }
-        bind "Super 2" { GoToTab 2; }
-        bind "Super 3" { GoToTab 3; }
-        bind "Super 4" { GoToTab 4; }
-        bind "Super 5" { GoToTab 5; }
-        bind "Super 6" { GoToTab 6; }
-        bind "Super 7" { GoToTab 7; }
-        bind "Super 8" { GoToTab 8; }
-        bind "Super 9" { GoToTab 9; }
-      
-        // Switch to specific modes
-        bind "Super p" { SwitchToMode "pane"; }
-        bind "Super r" { SwitchToMode "resize"; }
-        bind "Super f" { ToggleFocusFullscreen; }
-        bind "Super s" { SwitchToMode "search"; }
+        // === UTILITIES (Safe keys) ===
+        bind "Super d" { Detach; }                // D for Detach  
+        bind "Super b" { ScrollUp; }              // B for scroll Back/up
+        bind "Super ." { ScrollDown; }            // Period for scroll down
+        bind "Super ;" { Copy; }                  // Semicolon for copy
+        bind "Super /" { SwitchToMode "search"; } // / for search (universal)
       }
     
       resize {
         bind "Esc" { SwitchToMode "normal"; }
         bind "Enter" { SwitchToMode "normal"; }
         
-        bind "h" { Resize "Increase Left"; }
-        bind "j" { Resize "Increase Down"; }
-        bind "k" { Resize "Increase Up"; }
+        // Use same navigation keys for consistency
+        bind "j" { Resize "Increase Left"; }      // Consistent with main nav
+        bind "k" { Resize "Increase Down"; }
+        bind "i" { Resize "Increase Up"; }
         bind "l" { Resize "Increase Right"; }
         
-        bind "H" { Resize "Decrease Left"; }
-        bind "J" { Resize "Decrease Down"; }
-        bind "K" { Resize "Decrease Up"; }
+        // Shifted versions for decrease
+        bind "J" { Resize "Decrease Left"; }
+        bind "K" { Resize "Decrease Down"; }
+        bind "I" { Resize "Decrease Up"; }
         bind "L" { Resize "Decrease Right"; }
         
+        // Overall size adjustments
         bind "=" { Resize "Increase"; }
         bind "-" { Resize "Decrease"; }
         
-        bind "Super r" { SwitchToMode "normal"; }
-        bind "Super p" { SwitchToMode "pane"; }
+        // Quick mode switches
+        bind "Super n" { SwitchToMode "normal"; }
+        bind "Super a" { SwitchToMode "pane"; }
       }
     
       pane {
         bind "Esc" { SwitchToMode "normal"; }
         bind "Enter" { SwitchToMode "normal"; }
         
-        bind "h" { MoveFocus "Left"; }
-        bind "j" { MoveFocus "Down"; }
-        bind "k" { MoveFocus "Up"; }
+        // Navigation (consistent with main nav)
+        bind "j" { MoveFocus "Left"; }
+        bind "k" { MoveFocus "Down"; }
+        bind "i" { MoveFocus "Up"; }
         bind "l" { MoveFocus "Right"; }
         
-        bind "n" { NewPane; }
-        bind "d" { NewPane "Down"; }
-        bind "r" { NewPane "Right"; }
-        bind "x" { CloseFocus; }
-        bind "f" { ToggleFocusFullscreen; }
-        bind "z" { TogglePaneFrames; }
-        bind "w" { ToggleFloatingPanes; }
-        bind "e" { TogglePaneEmbedOrFloating; }
-        bind "c" { SwitchToMode "resize"; }
+        // Pane operations
+        bind "t" { NewPane; }                     // T for new pane
+        bind "s" { NewPane "Down"; }              // S for split down
+        bind "v" { NewPane "Right"; }             // V for vertical split
+        bind "x" { CloseFocus; }                  // X for close
+        bind "g" { ToggleFocusFullscreen; }       // G for fullscreen
+        bind "f" { TogglePaneFrames; }            // F for frames (safe in pane mode)
+        bind "w" { ToggleFloatingPanes; }         // W for floating
+        bind "e" { TogglePaneEmbedOrFloating; }   // E for embed
+        bind "r" { SwitchToMode "resize"; }       // R for resize (safe in pane mode)
         
-        bind "Super p" { SwitchToMode "normal"; }
-        bind "Super r" { SwitchToMode "resize"; }
+        // Quick mode switches  
+        bind "Super a" { SwitchToMode "normal"; }
+        bind "Super n" { SwitchToMode "resize"; }
       }
       
       search {
         bind "Esc" { SwitchToMode "normal"; }
         bind "Enter" { SwitchToMode "normal"; }
         
-        bind "Super s" { SwitchToMode "normal"; }
-        bind "Super p" { SwitchToMode "pane"; }
-        bind "Super r" { SwitchToMode "resize"; }
+        // Quick mode switches
+        bind "Super /" { SwitchToMode "normal"; }
+        bind "Super a" { SwitchToMode "pane"; }
+        bind "Super n" { SwitchToMode "resize"; }
       }
     }
   '';

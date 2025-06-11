@@ -39,7 +39,7 @@
 
     packages = with pkgs; [
       xwayland-satellite
-      xdg-desktop-portal
+      xdg-desktop-portal-gnome
 
       # CLI essentials
       ripgrep
