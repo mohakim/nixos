@@ -93,6 +93,7 @@
         { on = [ "g" "h" ]; run = "cd ~"; desc = "Go to home directory"; }
         { on = [ "g" "d" ]; run = "cd ~/Downloads"; desc = "Go to Downloads"; }
         { on = [ "g" "c" ]; run = "cd ~/.config"; desc = "Go to config"; }
+        { on = [ "<Enter>" ]; run = "shell 'zellij action write-chars \":open $1\\n\" --name helix-main'"; }
       ];
     };
   };
