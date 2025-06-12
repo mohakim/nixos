@@ -3,10 +3,9 @@
   programs.zellij.enable = true;
 
   xdg.configFile."zellij/config.kdl".text = ''
-    // Zellij configuration with Super key bindings + sidebar layout
     theme "catppuccin-macchiato"
     pane_frames true
-    default_layout "sidebar"
+    default_layout "development"
     mouse_mode true
     copy_on_select false
     scroll_buffer_size 10000
@@ -21,16 +20,16 @@
         bind "Super l" { MoveFocus "Right"; }
       
         // Tab navigation (your existing scheme)
-        bind "Super h" { GoToPreviousTab; }
-        bind "Super ;" { GoToNextTab; }
+        bind "Super u" { GoToPreviousTab; }
+        bind "Super o" { GoToNextTab; }
       
         // Tab management (your existing scheme)
         bind "Super n" { NewTab; }
         bind "Super w" { CloseTab; }
       
         // Pane operations (your existing scheme)
-        bind "Super -" { NewPane "Down"; }
-        bind "Super =" { NewPane "Right"; }
+        bind "Super 9" { NewPane "Down"; }
+        bind "Super 0" { NewPane "Right"; }
         bind "Super x" { CloseFocus; }
       
         // Scrolling (your existing scheme)
@@ -49,8 +48,6 @@
         bind "Super 5" { GoToTab 5; }
         bind "Super 6" { GoToTab 6; }
         bind "Super 7" { GoToTab 7; }
-        bind "Super 8" { GoToTab 8; }
-        bind "Super 9" { GoToTab 9; }
       
         // Switch to specific modes (your existing scheme)
         bind "Super p" { SwitchToMode "pane"; }
@@ -114,8 +111,7 @@
     }
   '';
 
-  # Create the sidebar layout file
-  xdg.configFile."zellij/layouts/sidebar.kdl".text = ''
+  xdg.configFile."zellij/layouts/development.kdl".text = ''
     layout {
         default_tab_template {
             pane size=1 borderless=true {
@@ -129,12 +125,8 @@
         
         tab name="Edit" focus=true {
             pane split_direction="vertical" {
-                pane size="25%" {
-                    name "yazi-sidebar"
-                    command "yazi"
-                }
-                pane size="75%" {
-                    name "helix-main"
+                pane size="100%" {
+                    name "editor"
                     command "hx"
                     args "."
                 }
@@ -144,25 +136,15 @@
         tab name="Command" {
             pane split_direction="horizontal" {
                 pane size="50%" {
-                    name "compile-pane"
+                    name "command pane 1"
                     command "fish"
                 }
                 pane size="50%" {
-                    name "run-pane" 
+                    name "command pane 2" 
                     command "fish"
                 }
             }
         }
     }
   '';
-
-  # # Simple fish integration - just auto-attach
-  # programs.fish.interactiveShellInit = ''
-  #   if status is-interactive
-  #       and test "$TERM_PROGRAM" = "Alacritty"
-  #       and not set -q ZELLIJ
-  #       and not set -q VSCODE_PID
-  #       zellij attach -c default
-  #   end
-  # '';
 }
