@@ -15,10 +15,7 @@ in
       keyboards.default = {
         settings = {
           ids."*" = "";
-          main = {
-            capslock = "C-g";
-            alt = "layer(alt)";
-          };
+          main.alt = "layer(alt)";
           alt = {
             j = "left";
             i = "up";
@@ -28,7 +25,6 @@ in
             u = "home";
             o = "end";
           };
-          "alt:C" = { };
         };
       };
     };
