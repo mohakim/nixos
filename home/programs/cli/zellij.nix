@@ -1,15 +1,7 @@
+# Add this to your home/programs/cli/zellij.nix file
+
 { pkgs, ... }:
 
-let
-  # Simple shell wrapper that checks for .envrc in current directory
-  direnvShell = pkgs.writeShellScript "direnv-shell" ''
-    if [[ -f .envrc ]]; then
-      ${pkgs.direnv}/bin/direnv exec . ${pkgs.fish}/bin/fish
-    else
-      exec ${pkgs.fish}/bin/fish
-    fi
-  '';
-in
 {
   programs.zellij.enable = true;
 
@@ -21,8 +13,8 @@ in
     scroll_buffer_size 10000
     default_mode "normal"
     session_serialization false   
-    // Use direnv-aware shell by default
-    default_shell "${direnvShell}"
+    // Use regular fish shell
+    default_shell "${pkgs.fish}/bin/fish"
     
     keybinds {
       normal {
@@ -46,6 +38,51 @@ in
         unbind "Alt Up"
         unbind "Alt Down"
       }
+    }
+  '';
+
+  # Add the practice layout
+  xdg.configFile."zellij/layouts/practice.kdl".text = ''
+    layout {
+        default_tab_template {
+            pane size=1 borderless=true {
+                plugin location="zellij:tab-bar"
+            }
+            children
+            pane size=2 borderless=true {
+                plugin location="zellij:status-bar"
+            }
+        }
+        
+        tab name="Sandbox" focus=true {
+            pane split_direction="vertical" {
+                // Left pane - Glow for reading lessons (40% width)
+                pane size="40%" {
+                    name "Lesson"
+                    command "fish"
+                    args "-c" "direnv exec . glow src/$RUST_CHAPTER"
+                    cwd "~/projects/100-exercises-to-learn-rust/book"
+                }
+                
+                // Right pane - Helix for exercises (60% width)
+                pane size="60%" {
+                    name "Exercise"
+                    command "fish"
+                    args "-c" "direnv exec . hx ."
+                    cwd "~/projects/100-exercises-to-learn-rust/exercises/$RUST_CHAPTER"
+                    focus true
+                }
+            }
+        }
+        
+        tab name="Solutions" {
+            pane {
+                name "Solutions"
+                command "hx"
+                args "."
+                cwd "~/100-exercises-to-learn-rust/exercises/$RUST_CHAPTER"
+            }
+        }
     }
   '';
 }

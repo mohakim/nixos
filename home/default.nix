@@ -53,6 +53,7 @@
 
       # Desktop applications
       wasistlos
+      wootility
       krita
       obsidian
       element-desktop
@@ -140,6 +141,7 @@
 
   programs.direnv = {
     enable = true;
+    nix-direnv.enable = true;
   };
 
   # Enhanced CLI tools
