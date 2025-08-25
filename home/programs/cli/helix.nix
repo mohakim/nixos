@@ -79,42 +79,10 @@
         };
       };
 
-      keys = {
-        normal = {
-          esc = [ "collapse_selection" "keep_primary_selection" ];
-          ret = [ "move_line_down" "goto_first_nonwhitespace" ];
-          "}" = "goto_next_paragraph";
-          "{" = "goto_prev_paragraph";
-          G = "goto_file_end";
-          g = { g = "goto_file_start"; e = "goto_last_line"; };
-          "[" = "shrink_selection";
-          "]" = "expand_selection";
-          "S-up" = "extend_to_line_bounds";
-          "S-down" = "extend_line_below";
-          "S-left" = "extend_char_left";
-          "S-right" = "extend_char_right";
-          "/" = "search";
-          n = "search_next";
-          N = "search_prev";
-          "C-up" = [ "extend_to_line_bounds" "select_prev_sibling" ];
-          "C-down" = [ "extend_to_line_bounds" "select_next_sibling" ];
-          C = "copy_selection_on_next_line";
-          K = "hover";
-
-          space = {
-            f = "file_picker";
-            b = "buffer_picker";
-            h = "hover";
-            d = "goto_definition";
-            r = "rename_symbol";
-            a = "code_action";
-            s = "symbol_picker";
-          };
-        };
-
-        select = {
-          ";" = [ "collapse_selection" "keep_primary_selection" "normal_mode" ];
-        };
+      # Goto Mode Remapping
+      keys.normal.g = {
+        "n" = "goto_line_start";
+        "i" = "goto_line_end";
       };
     };
 
@@ -123,7 +91,7 @@
         {
           name = "rust";
           auto-format = true;
-          language-servers = [ "rust-analyzer" ];
+          language-servers = [ "rust-analyzer" "tailwindcss-ls" ];
         }
         {
           name = "nix";
@@ -145,12 +113,27 @@
             };
           };
         };
+        tailwindcss-ls = {
+          config.tailwindCSS = {
+            includeLanguages = { rust = "html"; };
+            emmetCompletions = true;
+            validate = true;
+            classAttributes = [ "class" "className" "class:list" ];
+            experimental.classRegex = [
+              "class\\s*:\\s*\"([^\"]*)\"" # RSX: class: "..."
+              [ "class\\s*:\\s*\\{([\\s\\S]*?)\\}" "[\"'`]([^\"'`]*)[\"'`]" ] # RSX: class: { ... }
+            ];
+          };
+          command = "tailwindcss-language-server";
+          args = [ "--stdio" ];
+        };
       };
     };
   };
 
   home.packages = with pkgs; [
     tailwindcss-language-server
+    vscode-langservers-extracted
     nil
     nixpkgs-fmt
   ];

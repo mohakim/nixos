@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, niri, ... }:
 
 with lib;
 let
@@ -9,7 +9,7 @@ in
     enable = mkEnableOption "Niri window manager";
     package = mkOption {
       type = types.package;
-      default = pkgs.niri-stable;
+      default = niri.packages.${pkgs.system}.niri-stable;
       description = "The Niri package to use";
     };
   };

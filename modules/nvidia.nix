@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 
 with lib;
 let
@@ -23,28 +23,12 @@ in
       package = cfg.package;
       modesetting.enable = true;
       powerManagement.enable = false;
-      open = false;
-      nvidiaSettings = true;
-      forceFullCompositionPipeline = true;
+      open = true;
     };
 
     # Hardware acceleration (moved from configuration.nix)
     hardware.graphics = {
       enable = true;
-      enable32Bit = true;
-      extraPackages = with pkgs; [
-        nvidia-vaapi-driver # NVIDIA hardware video acceleration
-        vaapiVdpau # VAAPI to VDPAU bridge
-        libvdpau-va-gl # VDPAU OpenGL backend
-      ];
     };
-
-    # NVIDIA and graphics-related packages
-    environment.systemPackages = with pkgs; [
-      vulkan-loader
-      vulkan-tools
-      vulkan-validation-layers
-      wayland-protocols
-    ];
   };
 }

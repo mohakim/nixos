@@ -12,7 +12,6 @@
 
     # Desktop programs
     ./programs/desktop/niri.nix
-    ./programs/desktop/proton-ge.nix
     ./programs/desktop/whatsapp.nix
     ./programs/desktop/fuzzel.nix
     ./programs/desktop/librewolf.nix
@@ -21,8 +20,6 @@
     ./services/wl-gammarelay.nix
     ./services/mako.nix
     ./services/reminders.nix
-    ./services/xwayland-satellite.nix
-
   ];
 
   home = {
@@ -38,9 +35,6 @@
     };
 
     packages = with pkgs; [
-      xwayland-satellite
-      xdg-desktop-portal-gnome
-
       # CLI essentials
       ripgrep
       fd
@@ -50,10 +44,10 @@
       ouch
       rustup
       jq
+      zoxide
 
       # Desktop applications
       wasistlos
-      wootility
       krita
       obsidian
       element-desktop
@@ -92,14 +86,6 @@
       ll = "eza -la --icons --git";
       tree = "eza --tree --icons";
       cat = "bat";
-      find = "fd";
-
-      # Git shortcuts
-      gs = "git status";
-      ga = "git add";
-      gc = "git commit";
-      gp = "git push";
-      gl = "git log --oneline --graph";
 
       # System operations
       rebuild = "cd ~/.config/nixos && sudo nixos-rebuild switch --flake .#nixos";
@@ -153,21 +139,6 @@
         italic-text = "always";
         style = "numbers,changes,header";
       };
-    };
-
-    fzf = {
-      enable = true;
-      enableFishIntegration = true;
-      defaultCommand = "fd --type file --hidden --follow --exclude .git";
-      defaultOptions = [
-        "--height 40%"
-        "--layout=reverse"
-        "--info=inline"
-        "--border"
-        "--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8"
-        "--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc"
-        "--color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
-      ];
     };
   };
 

@@ -96,10 +96,6 @@ in
           { command = [ "wl-gammarelay-rs" "run" ]; }
         ];
 
-        environment = {
-          "DISPLAY" = ":0";
-        };
-
         # Window rules
         window-rules = [
           # Apply rounded corners to ALL applications
@@ -137,8 +133,8 @@ in
           "Mod+Shift+Slash".action.show-hotkey-overlay = { };
 
           # Application launchers
-          "Ctrl+Tab".action.spawn = "alacritty";
-          "Mod+F".action.spawn = "librewolf";
+          "Ctrl+M".action.spawn = "alacritty";
+          "Mod+T".action.spawn = "librewolf";
           "Mod+Space".action.spawn = "fuzzel";
 
           # Audio controls
@@ -160,30 +156,28 @@ in
           };
 
           # Audio device switching
-          "Mod+1".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio family" ];
-          "Mod+2".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio headset" ];
-          "Mod+3".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio earbuds" ];
+          "Mod+Q".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio family" ];
+          "Mod+W".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio headset" ];
+          "Mod+F".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio earbuds" ];
 
           # Window management
-          "Ctrl+Escape".action.close-window = { };
+          "Ctrl+Shift+Semicolon".action.close-window = { };
 
           # Focus management
-          "Ctrl+K".action.focus-window-down = { };
-          "Ctrl+I".action.focus-window-up = { };
-          "Ctrl+J".action.focus-column-left = { };
-          "Ctrl+L".action.focus-column-right = { };
+          "Ctrl+N".action.focus-column-left = { };
+          "Ctrl+I".action.focus-column-right = { };
 
           # Column movement
-          "Ctrl+Mod+J".action.move-column-left = { };
-          "Ctrl+Mod+L".action.move-column-right = { };
+          "Ctrl+Mod+N".action.move-column-left = { };
+          "Ctrl+Mod+I".action.move-column-right = { };
           "Mod+Home".action.focus-column-first = { };
           "Mod+End".action.focus-column-last = { };
           "Mod+Ctrl+Home".action.move-column-to-first = { };
           "Mod+Ctrl+End".action.move-column-to-last = { };
 
           # Workspace navigation
-          "Ctrl+O".action.focus-workspace-down = { };
-          "Ctrl+U".action.focus-workspace-up = { };
+          "Ctrl+Y".action.focus-workspace-down = { };
+          "Ctrl+L".action.focus-workspace-up = { };
 
           # Workspace movement with mouse wheel
           "Mod+WheelScrollDown" = {

@@ -18,6 +18,7 @@
         family = "JetBrainsMono Nerd Font";
         size = "16px";
       };
+      displayUrlbarIcons = true;
 
       extraConfig = ''
         /* Fix border colors for proper contrast */
@@ -26,7 +27,7 @@
           --tf-border: var(--lwt-text-color, currentColor) !important;
           --tf-accent: var(--toolbarbutton-icon-fill) !important;
         }
-      
+
         /* Ensure all sections start with muted text-color border */
         #TabsToolbar,
         #nav-bar,
@@ -36,7 +37,7 @@
           border-color: var(--tf-border) !important;
           transition: border-color var(--tf-border-transition) !important;
         }
-      
+
         /* Only apply accent on actual hover/focus */
         #TabsToolbar:hover,
         #TabsToolbar:focus-within,
@@ -50,13 +51,13 @@
         #sidebar-box:focus-within {
           border-color: var(--tf-accent) !important;
         }
-      
+
         /* Completely reset urlbar styling - no borders when inactive */
         #urlbar-container {
           border: none !important;
           background: transparent !important;
         }
-      
+
         #urlbar {
           border: none !important;
           border-radius: var(--tf-rounding) !important;
@@ -69,7 +70,7 @@
           transform: none !important;
           margin: 0 !important;
         }
-      
+
         #urlbar[breakout][breakout-extend] {
           width: var(--urlbar-width) !important;
           height: var(--urlbar-height) !important;
@@ -79,7 +80,7 @@
         #urlbar[breakout][breakout-extend-disabled][open] {
           height: var(--urlbar-height);
         }
-      
+
         /* Active urlbar - ONLY text-colored border, never accent */
         #urlbar:focus-within,
         #urlbar[focused] {
@@ -93,7 +94,7 @@
           left: auto !important;
           transform: none !important;
         }
-      
+
         /* Hide urlbar suggestions/dropdown completely */
         .urlbarView,
         #urlbar .urlbarView,
@@ -102,7 +103,7 @@
           display: none !important;
           visibility: hidden !important;
         }
-      
+
         /* Aggressively remove any other borders that might be causing double-border effect */
         #urlbar:focus-within *,
         #urlbar[focused=""] * {
@@ -110,13 +111,13 @@
           box-shadow: none !important;
           outline: none !important;
         }
-      
+
         /* Force remove any inherited accent styling from navbar hover */
         #nav-bar:hover #urlbar,
         #nav-bar:focus-within #urlbar {
           border-color: var(--tf-border) !important;
         }
-      
+
         #nav-bar:hover #urlbar:focus-within,
         #nav-bar:focus-within #urlbar:focus-within,
         #nav-bar:hover #urlbar[focused],
@@ -131,14 +132,14 @@
         #urlbar-go-button {
           display: none;
         }
-      
+
         /* Remove conflicting urlbar background styling */
         #urlbar-background {
           background-color: transparent !important;
           border: none !important;
           box-shadow: none !important;
         }
-     
+
         /* Fix for issue #124 - Title positioning */
         #tabbrowser-tabbox::before {
           margin: -1.398rem 0.5rem !important;
@@ -146,7 +147,7 @@
           top: auto !important;
           transform: translateY(0) !important;
         }
-      
+
         /* Ensure title colors match border states */
         #TabsToolbar::before,
         #nav-bar::before,
@@ -156,7 +157,7 @@
           color: var(--lwt-text-color);
           transition: color var(--tf-border-transition);
         }
-      
+
         #TabsToolbar:hover::before,
         #nav-bar:hover::before,
         #tabbrowser-tabbox:hover::before,

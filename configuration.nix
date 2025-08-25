@@ -3,11 +3,8 @@
 {
   imports = [
     ./modules/bluetooth.nix
-    ./modules/gamescope.nix
-    ./modules/keyd.nix
     ./modules/niri.nix
     ./modules/nvidia.nix
-    ./modules/steam.nix
   ];
 
   # Nix configuration
@@ -27,13 +24,24 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # Boot configuration
+  # Boot configuration with Secure Boot
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      # Disable systemd-boot in favor of lanzaboote
+      systemd-boot.enable = false;
       efi.canTouchEfiVariables = true;
       timeout = 5;
     };
+
+    # Enable lanzaboote for Secure Boot
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
+
+    # Enable bootspec (required for lanzaboote)
+    bootspec.enable = true;
+
     kernelParams = [
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_UsePageAttributeTable=1"
@@ -130,18 +138,6 @@
       "XDG_CURRENT_DESKTOP" = "niri";
       "XDG_SESSION_TYPE" = "wayland";
       "QT_QPA_PLATFORM" = "wayland";
-
-      # NVIDIA specific variables
-      "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
-      "LIBVA_DRIVER_NAME" = "nvidia";
-      "GBM_BACKEND" = "nvidia-drm";
-      "WLR_RENDERER" = "vulkan";
-      "WLR_NO_HARDWARE_CURSORS" = "1";
-      "NVD_BACKEND" = "direct";
-
-      # Vulkan
-      "VK_ICD_FILENAMES" = "/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.x86_64.json";
-      "VK_LAYER_PATH" = "/run/opengl-driver/share/vulkan/explicit_layer.d";
     };
 
     variables = {
@@ -154,46 +150,17 @@
       file
       gnupg
       home-manager
+      sbctl # For Secure Boot key management
     ];
   };
 
-  services.udev.extraRules = ''
-    # Wooting One Legacy
-    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff01", TAG+="uaccess"
-    SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff01", TAG+="uaccess"
-
-    # Wooting One update mode
-    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2402", TAG+="uaccess"
-
-    # Wooting Two Legacy
-    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff02", TAG+="uaccess"
-    SUBSYSTEM=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="ff02", TAG+="uaccess"
-
-    # Wooting Two update mode
-    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2403", TAG+="uaccess"
-
-    # Generic Wooting devices (covers 60HE+ and all newer models)
-    SUBSYSTEM=="hidraw", ATTRS{idVendor}=="31e3", TAG+="uaccess"
-    SUBSYSTEM=="usb", ATTRS{idVendor}=="31e3", TAG+="uaccess"
-  '';
-
-  # Enable programs
-  programs = {
-    fish.enable = true;
-    command-not-found.enable = false;
-  };
+  programs.fish.enable = true;
 
   # Enable modules
   modules = {
     bluetooth.enable = true;
-    gamescope.enable = true;
-    keyd.enable = true;
     niri.enable = true;
     nvidia.enable = true;
-    steam = {
-      enable = true;
-      useGamescope = true;
-    };
   };
 
   system.stateVersion = "23.11";

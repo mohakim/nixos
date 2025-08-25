@@ -10,9 +10,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     textfox.url = "github:adriankarlen/textfox";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, niri, home-manager, textfox, ... }: {
+  outputs = { nixpkgs, niri, home-manager, textfox, lanzaboote, ... }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit niri textfox; };
@@ -21,6 +25,7 @@
         ./configuration.nix
         ./hardware.nix
         niri.nixosModules.niri
+        lanzaboote.nixosModules.lanzaboote
 
         # Home Manager integration
         home-manager.nixosModules.home-manager
@@ -30,35 +35,6 @@
           home-manager.users.mohakim = import ./home;
           home-manager.extraSpecialArgs = { inherit niri textfox; };
           home-manager.backupFileExtension = "backup";
-        }
-
-        # Inline overlays
-        {
-          nixpkgs.overlays = [
-            niri.overlays.niri
-            (final: prev: {
-              proton-ge-custom = prev.stdenv.mkDerivation rec {
-                pname = "proton-ge-custom";
-                version = "GE-Proton9-27";
-                src = prev.fetchurl {
-                  url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${version}/${version}.tar.gz";
-                  sha256 = "sha256-u9MQi6jc8XPdKmDvTrG40H4Ps8mhBhtbkxDFNVwVGTc=";
-                };
-                buildCommand = ''
-                  mkdir -p $out/proton-ge-custom
-                  tar -xzf $src --strip-components=1 -C $out/proton-ge-custom
-                  mkdir -p $out/share/steam/compatibilitytools.d
-                  ln -s $out/proton-ge-custom $out/share/steam/compatibilitytools.d/${version}
-                '';
-                meta = with prev.lib; {
-                  description = "Compatibility tool for Steam Play based on Wine and additional components";
-                  homepage = "https://github.com/GloriousEggroll/proton-ge-custom";
-                  license = licenses.bsd3;
-                  platforms = platforms.linux;
-                };
-              };
-            })
-          ];
         }
       ];
     };

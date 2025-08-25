@@ -1,9 +1,7 @@
 { config, ... }:
-
 {
   programs.fish = {
     enable = true;
-
     interactiveShellInit = ''
       # Initialize Starship prompt
       ${if config.programs.starship.enable then "starship init fish | source" else ""}
@@ -14,20 +12,21 @@
       # Set environment variables
       set -gx EDITOR hx
       set -gx VISUAL hx
+      
+      # Initialize helix key bindings
+      set -g fish_key_bindings fish_vi_key_bindings
     '';
 
     functions = {
-      # Audio device switching
+      # Your existing audio toggle function
       toggle-audio = {
         body = ''
           set family_name "alsa_output.pci-0000_05_00.6.analog-stereo"
           set headset_name "alsa_output.usb-Logitech_G733_Gaming_Headset-00.analog-stereo"
           set earbuds_name "bluez_output.3C_B0_ED_50_C0_1C.1"
-
           set family_id (pw-cli info $family_name | head -n 1 | awk '{print $2}')
           set headset_id (pw-cli info $headset_name | head -n 1 | awk '{print $2}')
           set earbuds_id (pw-cli info $earbuds_name | head -n 1 | awk '{print $2}')
-
           switch "$argv[1]"
             case "family"
               wpctl set-default "$family_id"
@@ -44,3 +43,4 @@
     };
   };
 }
+
