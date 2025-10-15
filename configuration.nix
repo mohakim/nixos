@@ -42,6 +42,7 @@
     # Enable bootspec (required for lanzaboote)
     bootspec.enable = true;
 
+    kernelModules = [ "vboxdrv" "vboxnetflt" "vboxnetadp" "vboxpci" ];
     kernelParams = [
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_UsePageAttributeTable=1"
@@ -57,6 +58,9 @@
       enable = true;
       allowPing = true;
     };
+    hosts = {
+      "10.10.11.87" = [ "expressway.htb" "expressway" ];
+    };
   };
 
   time.timeZone = "Asia/Kuala_Lumpur";
@@ -71,7 +75,8 @@
       "video"
       "audio"
       "input"
-      "libvirtd"
+      "vboxusers"
+      "vboxsf"
     ];
     shell = pkgs.fish;
     uid = 1000;
@@ -106,6 +111,12 @@
       command = "niri --session";
       user = "mohakim";
     };
+  };
+
+
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableExtensionPack = true; # Needed for some features
   };
 
   # XDG portals for Wayland
@@ -145,6 +156,7 @@
     };
 
     systemPackages = with pkgs; [
+      gcc
       git
       curl
       file
