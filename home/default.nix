@@ -48,17 +48,13 @@
 
       # Desktop applications
       wasistlos
-      krita
       obsidian
-      element-desktop
       librewolf
-      webcord
       swww
       grim
       slurp
       wl-clipboard
       mpv
-      teams-for-linux
 
       # Font
       nerd-fonts.jetbrains-mono
@@ -106,22 +102,27 @@
   fonts.fontconfig.enable = true;
 
   # Git configuration
+
   programs.git = {
     enable = true;
-    userName = "mohakim";
-    userEmail = "m.abdihakim@proton.me";
-    extraConfig = {
+    settings = {
+      user = {
+        name = "mohakim";
+        email = "m.abdihakim@proton.me";
+      };
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
     };
-    delta = {
-      enable = true;
-      options = {
-        line-numbers = true;
-        side-by-side = true;
-        syntax-theme = "Monokai Extended";
-      };
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      line-numbers = true;
+      side-by-side = true;
+      syntax-theme = "Monokai Extended";
     };
   };
 
