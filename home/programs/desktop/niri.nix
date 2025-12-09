@@ -36,6 +36,7 @@ in
             };
             position = { x = 0; y = 0; };
             scale = 1.0;
+            enable = true;
           };
           "eDP-1" = {
             mode = {
