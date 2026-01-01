@@ -59,11 +59,11 @@
       allowPing = true;
     };
     hosts = {
-      "10.10.11.87" = [ "expressway.htb" "expressway" ];
+      "10.10.11.86" = [ "soulmate.htb" "soulmate" ];
     };
   };
 
-  time.timeZone = "Asia/Kuala_Lumpur";
+  time.timeZone = "";
 
   # User configuration
   users.users.mohakim = {
@@ -75,8 +75,6 @@
       "video"
       "audio"
       "input"
-      "vboxusers"
-      "vboxsf"
     ];
     shell = pkgs.fish;
     uid = 1000;
@@ -113,11 +111,6 @@
     };
   };
 
-
-  virtualisation.virtualbox.host = {
-    enable = true;
-    enableExtensionPack = true; # Needed for some features
-  };
 
   # XDG portals for Wayland
   xdg.portal = {

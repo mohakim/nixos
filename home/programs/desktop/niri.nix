@@ -35,8 +35,8 @@ in
               refresh = 165.056;
             };
             position = { x = 0; y = 0; };
-            scale = 1.0;
-            enable = true;
+            scale = 1.5;
+            enable = false;
           };
           "eDP-1" = {
             mode = {
@@ -45,7 +45,7 @@ in
               refresh = 165.0;
             };
             position = { x = 0; y = 0; };
-            enable = false;
+            enable = true;
           };
         };
 
