@@ -9,7 +9,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    textfox.url = "github:adriankarlen/textfox";
+    cascade = {
+      url = "github:cascadefox/cascade";
+      flake = false;
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs = {
@@ -23,10 +26,10 @@
     };
   };
 
-  outputs = { nixpkgs, niri, home-manager, textfox, lanzaboote, ... }: {
+  outputs = { nixpkgs, niri, home-manager, cascade, lanzaboote, ... }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { inherit niri textfox; };
+      specialArgs = { inherit niri cascade; };
       modules = [
         # Core system configuration
         ./configuration.nix
@@ -40,7 +43,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.mohakim = import ./home;
-          home-manager.extraSpecialArgs = { inherit niri textfox; };
+          home-manager.extraSpecialArgs = { inherit niri cascade; };
           home-manager.backupFileExtension = "backup";
         }
       ];

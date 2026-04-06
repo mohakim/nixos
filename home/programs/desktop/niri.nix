@@ -36,9 +36,9 @@ in
             };
             position = { x = 0; y = 0; };
             scale = 1.5;
-            enable = false;
+            enable = true;
           };
-          "eDP-1" = {
+          "eDP-2" = {
             mode = {
               width = 2560;
               height = 1600;

@@ -1,198 +1,51 @@
-# LibreWolf with Textfox configuration
-{ pkgs, textfox, ... }:
+# LibreWolf with Cascade + Catppuccin Mocha
+{ lib, config, cascade, ... }:
 
-{
-  imports = [
-    textfox.homeManagerModules.default
+let
+  chromeDir =
+    let p = config.programs.librewolf.profiles.default;
+    in ".librewolf/${p.path}/chrome";
+
+  coreIncludes = [
+    "cascade-config.css"
+    "cascade-layout.css"
+    "cascade-responsive.css"
+    "cascade-tabs.css"
   ];
-
-  home.packages = [ pkgs.librewolf ];
-
-  # Textfox configuration
-  textfox = {
+in
+{
+  programs.librewolf = {
     enable = true;
-    profile = "sc8h747s.default";
-    config = {
-      displayNavButtons = true;
-      font = {
-        family = "JetBrainsMono Nerd Font";
-        size = "16px";
+
+    profiles.default = {
+      id = 0;
+      isDefault = true;
+
+      settings = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "svg.context-properties.content.enabled" = true;
+        "layers.acceleration.force-enabled" = true;
+        "gfx.webrender.all" = true;
       };
-      displayUrlbarIcons = true;
 
-      extraConfig = ''
-        /* Fix border colors for proper contrast */
-        :root {
-          /* Make default border match text color for better contrast */
-          --tf-border: var(--lwt-text-color, currentColor) !important;
-          --tf-accent: var(--toolbarbutton-icon-fill) !important;
-        }
-
-        /* Ensure all sections start with muted text-color border */
-        #TabsToolbar,
-        #nav-bar,
-        #tabbrowser-tabbox,
-        #PersonalToolbar,
-        #sidebar-box {
-          border-color: var(--tf-border) !important;
-          transition: border-color var(--tf-border-transition) !important;
-        }
-
-        /* Only apply accent on actual hover/focus */
-        #TabsToolbar:hover,
-        #TabsToolbar:focus-within,
-        #nav-bar:hover, 
-        #nav-bar:focus-within,
-        #tabbrowser-tabbox:hover,
-        #tabbrowser-tabbox:focus-within,
-        #PersonalToolbar:hover,
-        #PersonalToolbar:focus-within,
-        #sidebar-box:hover,
-        #sidebar-box:focus-within {
-          border-color: var(--tf-accent) !important;
-        }
-
-        /* Completely reset urlbar styling - no borders when inactive */
-        #urlbar-container {
-          border: none !important;
-          background: transparent !important;
-        }
-
-        #urlbar {
-          border: none !important;
-          border-radius: var(--tf-rounding) !important;
-          background-color: transparent !important;
-          transition: border-color var(--tf-border-transition) !important;
-          /* Prevent any positioning changes when typing */
-          position: static !important;
-          top: auto !important;
-          left: auto !important;
-          transform: none !important;
-          margin: 0 !important;
-        }
-
-        #urlbar[breakout][breakout-extend] {
-          width: var(--urlbar-width) !important;
-          height: var(--urlbar-height) !important;
-        }
-
-        #urlbar[breakout][breakout-extend],
-        #urlbar[breakout][breakout-extend-disabled][open] {
-          height: var(--urlbar-height);
-        }
-
-        /* Active urlbar - ONLY text-colored border, never accent */
-        #urlbar:focus-within,
-        #urlbar[focused] {
-          border: var(--tf-border-width) solid var(--tf-border) !important;
-          /* Explicitly prevent any accent color bleeding */
-          box-shadow: none !important;
-          outline: none !important;
-          /* Ensure no position changes even when focused */
-          position: static !important;
-          top: auto !important;
-          left: auto !important;
-          transform: none !important;
-        }
-
-        /* Hide urlbar suggestions/dropdown completely */
-        .urlbarView,
-        #urlbar .urlbarView,
-        #urlbar-results,
-        .urlbar-results {
-          display: none !important;
-          visibility: hidden !important;
-        }
-
-        /* Aggressively remove any other borders that might be causing double-border effect */
-        #urlbar:focus-within *,
-        #urlbar[focused=""] * {
-          border: none !important;
-          box-shadow: none !important;
-          outline: none !important;
-        }
-
-        /* Force remove any inherited accent styling from navbar hover */
-        #nav-bar:hover #urlbar,
-        #nav-bar:focus-within #urlbar {
-          border-color: var(--tf-border) !important;
-        }
-
-        #nav-bar:hover #urlbar:focus-within,
-        #nav-bar:focus-within #urlbar:focus-within,
-        #nav-bar:hover #urlbar[focused],
-        #nav-bar:focus-within #urlbar[focused] {
-          border-color: var(--tf-border) !important;
-        }
-
-        #identity-box {
-          display: none;
-        }
-
-        #urlbar-go-button {
-          display: none;
-        }
-
-        /* Remove conflicting urlbar background styling */
-        #urlbar-background {
-          background-color: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-        }
-
-        /* Fix for issue #124 - Title positioning */
-        #tabbrowser-tabbox::before {
-          margin: -1.398rem 0.5rem !important;
-          text-shadow: none !important;
-          top: auto !important;
-          transform: translateY(0) !important;
-        }
-
-        /* Ensure title colors match border states */
-        #TabsToolbar::before,
-        #nav-bar::before,
-        #tabbrowser-tabbox::before,
-        #PersonalToolbar::before,
-        #sidebar-box::before {
-          color: var(--lwt-text-color);
-          transition: color var(--tf-border-transition);
-        }
-
-        #TabsToolbar:hover::before,
-        #nav-bar:hover::before,
-        #tabbrowser-tabbox:hover::before,
-        #PersonalToolbar:hover::before,
-        #sidebar-box:hover::before {
-          color: var(--tf-accent);
-        }
-        
-        #sidebar-main {
-          display: none;
-        }
-        
-        #sidebar-panel-header {
-          display: none;
-        }
-      '';
+      userChrome = builtins.readFile "${cascade}/chrome/userChrome.css";
     };
   };
 
-  # Copy textfox files from firefox to librewolf directory
+  home.file =
+    lib.listToAttrs
+      (map
+        (f: {
+          name = "${chromeDir}/includes/${f}";
+          value = { source = "${cascade}/chrome/includes/${f}"; };
+        })
+        coreIncludes)
+    // {
+      "${chromeDir}/includes/cascade-colours.css" = {
+        source = "${cascade}/integrations/catppuccin/cascade-mocha.css";
+      };
+    };
 
-  home.activation.copyTextfoxToLibrewolf = ''
-    FIREFOX_DIR="$HOME/.mozilla/firefox/sc8h747s.default"
-    LIBREWOLF_DIR="$HOME/.librewolf/sc8h747s.default"
-
-    if [ -d "$FIREFOX_DIR" ]; then
-      echo "Copying textfox files from Firefox to LibreWolf..."
-      mkdir -p "$LIBREWOLF_DIR"
-      cp -r "$FIREFOX_DIR"/* "$LIBREWOLF_DIR/" 2>/dev/null || true
-      rm -rf "$HOME/.mozilla/firefox"
-      echo "Textfox files copied to LibreWolf and Firefox directory removed."
-    fi
-  '';
-
-  # XDG MIME associations for LibreWolf
   xdg.mimeApps.defaultApplications = {
     "text/html" = "librewolf.desktop";
     "x-scheme-handler/http" = "librewolf.desktop";

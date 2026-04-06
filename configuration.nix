@@ -63,7 +63,7 @@
     };
   };
 
-  time.timeZone = "";
+  time.timeZone = "Asia/Kuala_Lumpur";
 
   # User configuration
   users.users.mohakim = {

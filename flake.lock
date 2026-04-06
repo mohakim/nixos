@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "cascade": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1759367139,
+        "narHash": "sha256-uGC+SIRisABvulJcpiHwE4mhhwzMVtpo3RMJEJoCaPU=",
+        "owner": "cascadefox",
+        "repo": "cascade",
+        "rev": "8700d7718d130023815f0b036f3b1c4aaa2d5392",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cascadefox",
+        "repo": "cascade",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1765145449,
@@ -13,29 +29,6 @@
         "owner": "ipetkov",
         "repo": "crane",
         "type": "github"
-      }
-    },
-    "firefox-addons": {
-      "inputs": {
-        "nixpkgs": [
-          "textfox",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "dir": "pkgs/firefox-addons",
-        "lastModified": 1754512310,
-        "narHash": "sha256-gXE5lTYMOhpDJo+siLXW/3BzySPmLMD12GVB1QFVbyw=",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "rev": "2008f9aa7a5ccde48bfc1de5a919be5898da09c2",
-        "type": "gitlab"
-      },
-      "original": {
-        "dir": "pkgs/firefox-addons",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "type": "gitlab"
       }
     },
     "flake-compat": {
@@ -211,22 +204,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1728492678,
-        "narHash": "sha256-9UTxR8eukdg+XZeHgxW5hQA9fIKHsKCdOIUycTryeVw=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "5633bcff0c6162b9e4b5f1264264611e950c8ec7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -252,12 +229,12 @@
     },
     "root": {
       "inputs": {
+        "cascade": "cascade",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
         "niri": "niri",
         "nixpkgs": "nixpkgs",
-        "rust-overlay": "rust-overlay",
-        "textfox": "textfox"
+        "rust-overlay": "rust-overlay"
       }
     },
     "rust-overlay": {
@@ -277,25 +254,6 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "textfox": {
-      "inputs": {
-        "firefox-addons": "firefox-addons",
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "lastModified": 1763730250,
-        "narHash": "sha256-OPlKRltdA2iIm70Nw/kWt5FnwxR1xmxC44tqGUX7Hro=",
-        "owner": "adriankarlen",
-        "repo": "textfox",
-        "rev": "2f385d16abab56984b874627ca0dd4f3ca7ae4ac",
-        "type": "github"
-      },
-      "original": {
-        "owner": "adriankarlen",
-        "repo": "textfox",
         "type": "github"
       }
     },
