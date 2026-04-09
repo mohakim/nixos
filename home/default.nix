@@ -102,7 +102,6 @@
   fonts.fontconfig.enable = true;
 
   # Git configuration
-
   programs.git = {
     enable = true;
     settings = {
@@ -110,6 +109,7 @@
         name = "mohakim";
         email = "m.abdihakim@proton.me";
       };
+      credential.helper = "store";
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
