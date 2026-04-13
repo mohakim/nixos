@@ -115,7 +115,9 @@
         };
         tailwindcss-ls = {
           config.tailwindCSS = {
-            includeLanguages = { rust = "html"; };
+            includeLanguages = {
+              rust = "html";
+            };
             emmetCompletions = true;
             validate = true;
             classAttributes = [ "class" "className" "class:list" ];
