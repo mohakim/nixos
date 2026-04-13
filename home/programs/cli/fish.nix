@@ -28,7 +28,7 @@
           switch "$argv[1]"
             case "speakers"
               wpctl set-default "$speakers_id"
-            case "headset"
+            case "earphones"
               wpctl set-default "$earphones_id"
             case "*"
               echo "Unknown audio device. Use: speakers, earphones"
