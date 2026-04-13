@@ -157,9 +157,8 @@ in
           };
 
           # Audio device switching
-          "Mod+Q".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio family" ];
-          "Mod+W".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio headset" ];
-          "Mod+F".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio earbuds" ];
+          "Mod+Q".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio speakers" ];
+          "Mod+W".action.spawn = [ "fish" "-c" "source ~/.config/fish/config.fish; toggle-audio earphones" ];
 
           # Window management
           "Ctrl+Shift+Semicolon".action.close-window = { };

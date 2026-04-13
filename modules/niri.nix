@@ -9,7 +9,7 @@ in
     enable = mkEnableOption "Niri window manager";
     package = mkOption {
       type = types.package;
-      default = niri.packages.${pkgs.system}.niri-unstable;
+      default = niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
       description = "The Niri package to use";
     };
   };
