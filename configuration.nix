@@ -75,6 +75,7 @@
       "video"
       "audio"
       "input"
+      "docker"
     ];
     shell = pkgs.fish;
     uid = 1000;
@@ -158,6 +159,8 @@
       sbctl # For Secure Boot key management
     ];
   };
+
+  virtualisation.docker.enable = true;
 
   programs.fish.enable = true;
 
