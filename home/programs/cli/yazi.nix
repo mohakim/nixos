@@ -6,7 +6,7 @@
     enableFishIntegration = true;
 
     settings = {
-      manager = {
+      mgr = {
         show_hidden = true;
         sort_by = "natural";
         sort_sensitive = false;
@@ -89,7 +89,7 @@
     };
 
     keymap = {
-      manager.prepend_keymap = [
+      mgr.prepend_keymap = [
         { on = [ "g" "h" ]; run = "cd ~"; desc = "Go to home directory"; }
         { on = [ "g" "d" ]; run = "cd ~/Downloads"; desc = "Go to Downloads"; }
         { on = [ "g" "c" ]; run = "cd ~/.config"; desc = "Go to config"; }
